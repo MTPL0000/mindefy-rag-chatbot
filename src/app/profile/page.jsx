@@ -127,7 +127,33 @@ export default function ProfilePage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster 
+          position="top-center" 
+          reverseOrder={false}
+          containerStyle={{
+            top: '80px',
+          }}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#fff',
+              color: '#333',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            },
+            success: {
+              style: {
+                border: '1px solid #10b981',
+              },
+            },
+            error: {
+              style: {
+                border: '1px solid #ef4444',
+              },
+            },
+          }}
+        />
         <Header />
 
         {/* Delete Account Modal */}
@@ -148,7 +174,7 @@ export default function ProfilePage() {
             {/* User Info */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
               <div className="flex items-center space-x-4 mb-4 md:mb-0">
-                <div className="h-10 w-16 md:h-16 rounded-full bg-green-600 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="h-10 w-16 md:h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold" style={{backgroundColor: '#332771'}}>
                   {getInitials(formData.username || user?.username || "U")}
                 </div>
                 <div>
@@ -214,11 +240,14 @@ export default function ProfilePage() {
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className={`w-full pl-10 pr-10 text-black py-3 border-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
+                      className={`w-full pl-10 pr-10 text-black py-3 border-2 rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
                         validationErrors.gender
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200"
                       }`}
+                      style={{
+                        '--tw-ring-color': validationErrors.gender ? '#ef4444' : '#332771'
+                      }}
                     >
                       <option value="" disabled>
                         Select your gender

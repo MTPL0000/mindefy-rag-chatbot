@@ -54,20 +54,20 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      {/* Header with BREATHE AI branding */}
+      {/* Header with Mindefy AI branding */}
       <div className="w-full max-w-sm mb-8">
-        <div className="bg-green-500 rounded-2xl p-8 text-center text-white mb-8">
+        <div className="rounded-2xl p-8 text-center mb-8" style={{background: 'linear-gradient(135deg, rgba(51, 39, 113, 0.35) 0%, rgba(217, 51, 17, 0.40) 100%)', border: '1px solid rgba(51, 39, 113, 0.3)'}}>
           <div className="mx-auto mb-4 flex items-center justify-center">
             <Image
-              src="/logo.png"
-              alt="BREATHE AI"
+              src="/logo.svg"
+              alt="Mindefy AI"
               width={80}
               height={80}
               className="rounded-full"
             />
           </div>
-          <h1 className="text-xl font-bold tracking-wide">BREATHE AI</h1>
-          <p className="text-green-100 text-sm mt-2">
+          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>Mindefy AI</h1>
+          <p className="text-sm mt-2" style={{color: 'rgba(51, 39, 113, 0.7)'}}>
             Welcome back to your wellness journey
           </p>
         </div>
@@ -83,7 +83,10 @@ export default function LoginForm() {
             or{" "}
             <Link
               href="signup"
-              className="text-green-500 font-medium hover:text-green-600"
+              className="font-medium transition-colors duration-200"
+              style={{color: '#332771'}}
+              onMouseEnter={(e) => e.target.style.color = '#d93311'}
+              onMouseLeave={(e) => e.target.style.color = '#332771'}
             >
               create a new account
             </Link>

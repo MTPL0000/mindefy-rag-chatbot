@@ -27,13 +27,26 @@ const InputField = ({
           className={`
               w-full pl-10 pr-${showPasswordToggle ? "10" : "4"} py-3 text-black
               border-2 rounded-lg transition-all duration-300 ease-in-out
-              focus:outline-none focus:ring-2 focus:ring-green-500/20
+              focus:outline-none focus:ring-2
               ${
                 error
-                  ? "border-red-300 bg-red-50 focus:border-red-500"
-                  : "border-gray-200 bg-white focus:border-green-500 hover:border-gray-300"
+                  ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/20"
+                  : "border-gray-200 bg-white hover:border-gray-300"
               }
             `}
+          style={{
+            '--tw-ring-color': error ? 'rgba(239, 68, 68, 0.2)' : 'rgba(51, 39, 113, 0.2)'
+          }}
+          onFocus={(e) => {
+            if (!error) {
+              e.target.style.borderColor = '#332771';
+            }
+          }}
+          onBlur={(e) => {
+            if (!error) {
+              e.target.style.borderColor = '#d1d5db';
+            }
+          }}
         />
         {showPasswordToggle && (
           <button

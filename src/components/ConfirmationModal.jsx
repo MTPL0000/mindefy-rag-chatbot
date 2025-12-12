@@ -38,6 +38,13 @@ export default function ConfirmationModal({
       buttonBg: "bg-green-600 hover:bg-green-700",
       buttonText: "text-white",
     },
+    primary: {
+      icon: CheckCircle,
+      iconBg: "rgba(51, 39, 113, 0.1)",
+      iconColor: "#332771",
+      buttonBg: "#332771",
+      buttonText: "text-white",
+    },
   };
 
   const currentVariant = variantStyles[variant];
@@ -67,9 +74,10 @@ export default function ConfirmationModal({
           <div className="p-6 sm:p-8">
             {/* Icon */}
             <div
-              className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${currentVariant.iconBg}`}
+              className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full`}
+              style={{backgroundColor: variant === 'primary' ? currentVariant.iconBg : ''}}
             >
-              <Icon className={`h-6 w-6 ${currentVariant.iconColor}`} />
+              <Icon className={`h-6 w-6 ${variant === 'primary' ? '' : currentVariant.iconColor}`} style={{color: variant === 'primary' ? currentVariant.iconColor : ''}} />
             </div>
 
             {/* Title */}
@@ -90,7 +98,8 @@ export default function ConfirmationModal({
               <button
                 onClick={onConfirm}
                 disabled={isLoading}
-                className={`w-full cursor-pointer sm:w-auto px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${currentVariant.buttonBg} ${currentVariant.buttonText}`}
+                className={`w-full cursor-pointer sm:w-auto px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${variant === 'primary' ? 'text-white' : currentVariant.buttonBg + ' ' + currentVariant.buttonText}`}
+                style={variant === 'primary' ? {backgroundColor: currentVariant.buttonBg} : {}}
               >
                 {isLoading ? (
                   <>

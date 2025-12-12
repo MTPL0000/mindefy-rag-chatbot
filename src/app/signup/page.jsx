@@ -81,18 +81,18 @@ export default function SignupForm() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       {/* Header */}
       <div className="w-full max-w-md mb-8">
-        <div className="bg-green-500 rounded-2xl p-8 text-center text-white mb-2">
+        <div className="rounded-2xl p-8 text-center mb-2" style={{background: 'linear-gradient(135deg, rgba(51, 39, 113, 0.35) 0%, rgba(217, 51, 17, 0.40) 100%)', border: '1px solid rgba(51, 39, 113, 0.3)'}}>
           <div className="mx-auto mb-4 flex items-center justify-center">
             <Image
-              src="/logo.png"
-              alt="BREATHE AI"
+              src="/logo.svg"
+              alt="Mindefy AI"
               width={80}
               height={80}
               className="rounded-full"
             />
           </div>
-          <h1 className="text-xl font-bold tracking-wide">BREATHE AI</h1>
-          <p className="text-green-100 text-sm mt-2">
+          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>Mindefy AI</h1>
+          <p className="text-sm mt-2" style={{color: 'rgba(51, 39, 113, 0.7)'}}>
             Start your wellness journey today
           </p>
         </div>
@@ -102,10 +102,13 @@ export default function SignupForm() {
         {/* Show success message instead of form */}
         {successMessage ? (
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <p className="text-green-600 font-medium mb-5">{successMessage}</p>
+            <p className="font-medium mb-5" style={{color: '#332771'}}>{successMessage}</p>
             <Link
               href="/login"
-              className="text-green-500 font-medium hover:text-green-600"
+              className="font-medium transition-colors duration-200"
+              style={{color: '#332771'}}
+              onMouseEnter={(e) => e.target.style.color = '#d93311'}
+              onMouseLeave={(e) => e.target.style.color = '#332771'}
             >
               Sign In
             </Link>
@@ -120,7 +123,10 @@ export default function SignupForm() {
                 Or{" "}
                 <Link
                   href="/login"
-                  className="text-green-500 font-medium hover:text-green-600"
+                  className="font-medium transition-colors duration-200"
+                  style={{color: '#332771'}}
+                  onMouseEnter={(e) => e.target.style.color = '#d93311'}
+                  onMouseLeave={(e) => e.target.style.color = '#332771'}
                 >
                   sign in to your account
                 </Link>
@@ -182,11 +188,14 @@ export default function SignupForm() {
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className={`w-full pl-10 pr-4 text-black py-3 border-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
+                      className={`w-full pl-10 pr-4 text-black py-3 border-2 rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
                         validationErrors.gender
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200"
                       }`}
+                      style={{
+                        '--tw-ring-color': validationErrors.gender ? '#ef4444' : '#332771'
+                      }}
                     >
                       <option value="" disabled>
                         Select your gender
