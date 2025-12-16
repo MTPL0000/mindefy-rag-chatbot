@@ -165,17 +165,17 @@ export default function PDFAdminPage() {
         <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-white rounded-lg shadow-md">
             {/* Header */}
-            <div className="border-b border-gray-200 px-6 py-4">
-              <div className="flex items-center justify-between">
+            <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
-                  <h1 className="text-2xl font-bold" style={{color: '#332771'}}>
+                  <h1 className="text-xl sm:text-2xl font-bold" style={{color: '#332771'}}>
                     PDF Management
                   </h1>
-                  <p className="text-gray-600 mt-1">
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base">
                     Manage the PDF document for the AI system
                   </p>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center sm:justify-end space-x-3">
                   <input
                     type="file"
                     accept=".pdf"
@@ -185,7 +185,7 @@ export default function PDFAdminPage() {
                   />
                   <label
                     htmlFor="pdf-upload"
-                    className="cursor-pointer inline-flex items-center px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20"
+                    className="cursor-pointer inline-flex items-center px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20 w-full sm:w-auto justify-center"
                     style={{
                       backgroundColor: '#332771',
                       boxShadow: '0 2px 8px rgba(51, 39, 113, 0.2)'
@@ -207,32 +207,32 @@ export default function PDFAdminPage() {
             </div>
 
             {/* Content */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {currentPDF ? (
                 <div className="space-y-6">
                   {/* Current PDF Info */}
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Current PDF Document</h2>
-                    <div className="bg-gray-50 rounded-lg p-6 border-2 border-dashed" style={{borderColor: '#332771'}}>
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center space-x-4">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Current PDF Document</h2>
+                    <div className="bg-gray-50 rounded-lg p-4 sm:p-6 border-2 border-dashed" style={{borderColor: '#332771'}}>
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-4 sm:space-y-0">
+                        <div className="flex items-center space-x-3 sm:space-x-4">
                           <div 
-                            className="w-16 h-16 rounded-lg flex items-center justify-center"
+                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center flex-shrink-0"
                             style={{backgroundColor: 'rgba(51, 39, 113, 0.1)'}}
                           >
-                            <FileText className="w-8 h-8" style={{color: '#332771'}} />
+                            <FileText className="w-6 h-6 sm:w-8 sm:h-8" style={{color: '#332771'}} />
                           </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                               {currentPDF.name}
                             </h3>
-                            <div className="text-sm text-gray-500 space-y-1">
+                            <div className="text-xs sm:text-sm text-gray-500 space-y-1">
                               <p>Size: {currentPDF.size}</p>
                               <p>Uploaded: {new Date(currentPDF.uploadDate).toLocaleDateString()}</p>
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
                           <Button
                             variant="outline"
                             size="sm"
@@ -260,24 +260,24 @@ export default function PDFAdminPage() {
                   {/* New PDF Preview Section */}
                   {newPDF && (
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900 mb-4">New PDF Preview</h2>
-                      <div className="bg-yellow-50 rounded-lg p-6 border-2 border-dashed border-yellow-300">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center space-x-4">
-                            <div className="w-16 h-16 rounded-lg bg-yellow-100 flex items-center justify-center">
-                              <FileText className="w-8 h-8 text-yellow-600" />
+                      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">New PDF Preview</h2>
+                      <div className="bg-yellow-50 rounded-lg p-4 sm:p-6 border-2 border-dashed border-yellow-300">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-4 sm:space-y-0">
+                          <div className="flex items-center space-x-3 sm:space-x-4">
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                              <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" />
                             </div>
-                            <div>
-                              <h3 className="text-lg font-semibold text-gray-900">
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                                 {newPDF.name}
                               </h3>
-                              <div className="text-sm text-gray-500 space-y-1">
+                              <div className="text-xs sm:text-sm text-gray-500 space-y-1">
                                 <p>Size: {newPDF.size}</p>
                                 <p className="text-yellow-600 font-medium">Ready for replacement</p>
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
                             <Button
                               variant="outline"
                               size="sm"
@@ -311,7 +311,7 @@ export default function PDFAdminPage() {
                               variant="primary"
                               size="sm"
                               onClick={() => setShowReplaceModal(true)}
-                              className="ml-2"
+                              className="sm:ml-2"
                             >
                               Replace Current PDF
                             </Button>
@@ -324,19 +324,19 @@ export default function PDFAdminPage() {
                 </div>
               ) : (
                 /* No PDF State */
-                <div className="text-center py-12">
-                  <div className="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6" style={{backgroundColor: 'rgba(51, 39, 113, 0.1)'}}>
-                    <FileText className="w-12 h-12" style={{color: '#332771'}} />
+                <div className="text-center py-8 sm:py-12 px-4">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center mb-4 sm:mb-6" style={{backgroundColor: 'rgba(51, 39, 113, 0.1)'}}>
+                    <FileText className="w-8 h-8 sm:w-12 sm:h-12" style={{color: '#332771'}} />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                     No PDF Uploaded
                   </h3>
-                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 max-w-md mx-auto">
                     Upload a PDF document to make it available for the AI system to reference and use.
                   </p>
                   <label
                     htmlFor="pdf-upload-empty"
-                    className="cursor-pointer inline-flex items-center px-6 py-3 rounded-lg text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="cursor-pointer inline-flex items-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto justify-center max-w-xs mx-auto"
                     style={{backgroundColor: '#332771'}}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d93311'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#332771'}
@@ -355,10 +355,10 @@ export default function PDFAdminPage() {
               )}
 
               {/* Instructions */}
-              <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="mt-6 sm:mt-8 bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
                 <div className="flex items-start">
-                  <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-                  <div className="text-sm">
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 mr-2 sm:mr-3 flex-shrink-0" />
+                  <div className="text-xs sm:text-sm">
                     <h4 className="font-medium text-blue-900 mb-1">Instructions</h4>
                     <ul className="text-blue-800 space-y-1">
                       <li>• Only PDF files are supported</li>

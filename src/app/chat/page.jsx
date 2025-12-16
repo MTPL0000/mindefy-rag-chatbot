@@ -26,11 +26,17 @@ export default function ChatPage() {
 
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
 
   // Initialize data
   useEffect(() => {
     fetchUserProfile();
     initializeWelcomeMessage();
+  }, []);
+
+  // Initialize textarea height on mount
+  useEffect(() => {
+    adjustTextareaHeight();
   }, []);
 
   // Show error toasts
@@ -46,6 +52,47 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChat]);
 
+  // Auto-resize textarea
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      // Reset height to get accurate scrollHeight
+      textarea.style.height = 'auto';
+      
+      // Calculate responsive line height and max lines
+      const isMobile = window.innerWidth < 640; // sm breakpoint
+      const lineHeight = isMobile ? 20 : 24; // Smaller line height on mobile
+      const maxLines = 4;
+      const minHeight = isMobile ? 40 : 46; // Match min-h from CSS
+      const maxHeight = lineHeight * maxLines;
+      
+      // Calculate new height, ensuring it's at least minHeight
+      const contentHeight = Math.max(textarea.scrollHeight, minHeight);
+      const newHeight = Math.min(contentHeight, maxHeight);
+      textarea.style.height = `${newHeight}px`;
+      
+      // Handle scrolling behavior with proper padding consideration
+      if (textarea.scrollHeight > maxHeight) {
+        textarea.style.overflowY = 'scroll';
+        textarea.style.paddingRight = isMobile ? '40px' : '48px'; // Ensure space for button
+        // Scroll to bottom to show the latest text (like ChatGPT)
+        setTimeout(() => {
+          textarea.scrollTop = textarea.scrollHeight;
+        }, 0);
+      } else {
+        textarea.style.overflowY = 'hidden';
+        textarea.style.paddingRight = isMobile ? '40px' : '48px'; // Consistent padding
+      }
+    }
+  };
+
+  // Handle input change with auto-resize
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+    // Delay the height adjustment to ensure the DOM is updated
+    setTimeout(adjustTextareaHeight, 0);
+  };
+
   const getInitials = (name) => {
     if (!name) return "U";
     const parts = name.split(" ");
@@ -56,17 +103,23 @@ export default function ChatPage() {
   };
 
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLoadingChat) return;
 
-    // All logged-in users can now use the chatbot
-
-    const currentInput = input;
+    const messageText = input.trim();
     setInput("");
+    
+    // Reset textarea height after sending
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        adjustTextareaHeight();
+      }
+    }, 0);
 
-    const result = await sendMessage(currentInput);
-
-    if (!result.success) {
-      toast.error(result.error);
+    try {
+      await sendMessage(messageText);
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
 
@@ -86,18 +139,18 @@ export default function ChatPage() {
       <div className="h-screen bg-gray-50 flex flex-col">
         <Header />
 
-        <div className="flex flex-1 overflow-hidden p-6">
+        <div className="flex flex-1 overflow-hidden p-2 sm:p-4 md:p-6">
           {/* Main chat area - centered and full width */}
           <div className="w-full max-w-4xl mx-auto flex flex-col bg-white/90 backdrop-blur-sm rounded-lg shadow-2xl border border-white/20" style={{boxShadow: '0 25px 50px -12px rgba(51, 39, 113, 0.15), 0 0 0 1px rgba(51, 39, 113, 0.05)'}}>
             {/* Chat header */}
-            <div className="border-b border-gray-200/50 p-4 bg-white/80 backdrop-blur-md rounded-t-lg">
+            <div className="border-b border-gray-200/50 p-3 sm:p-4 bg-white/80 backdrop-blur-md rounded-t-lg">
               <div className="flex items-center justify-center">
-                <h1 className="text-xl font-semibold text-gray-800">Mindefy AI Chat</h1>
+                <h1 className="text-lg sm:text-xl font-semibold text-gray-800">Mindefy AI Chat</h1>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto scroll-smooth p-6 space-y-4 bg-gradient-to-b from-gray-50/50 to-white/50 rounded-b-lg">
+            <div className="flex-1 overflow-y-auto scroll-smooth p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-gray-50/50 to-white/50 rounded-b-lg">
               {currentChat.map((message, index) => (
                 <div
                   key={message.id || index}
@@ -202,10 +255,10 @@ export default function ChatPage() {
             </div>
 
             {/* New Chat Button - Integrated in Input Area */}
-            <div className="absolute top-4 right-4 z-10">
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
               <button
                 onClick={handleStartNewChat}
-                className="cursor-pointer flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 backdrop-blur-sm border"
+                className="cursor-pointer flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 backdrop-blur-sm border"
                 style={{
                   background: 'rgba(255, 255, 255, 0.9)',
                   borderColor: '#332771',
@@ -222,25 +275,29 @@ export default function ChatPage() {
                   e.currentTarget.style.borderColor = '#332771';
                 }}
               >
-                <Plus className="w-4 h-4" />
-                <span>New Chat</span>
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">New Chat</span>
+                <span className="sm:hidden">New</span>
               </button>
             </div>
 
             {/* Input area */}
-            <div className="border-t border-gray-200/50 p-6 bg-white/80 backdrop-blur-md">
-              <div className="flex items-end space-x-3">
+            <div className="border-t border-gray-200/50 p-3 sm:p-4 md:p-6 bg-white/80 backdrop-blur-md">
+              <div className="flex items-end space-x-2 sm:space-x-3">
                 <div className="relative w-full max-w-3xl mx-auto">
                   <textarea
+                    ref={textareaRef}
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder="Ask Mindefy AI..."
-                    className="w-full text-black px-4 py-2 pr-12 border-1 border-gray-300/70 rounded-3xl outline-none focus:ring-1 resize-none max-h-32 min-h-[46px] bg-white/90 backdrop-blur-sm shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-full text-black px-3 sm:px-4 py-2 pr-10 sm:pr-12 border-1 border-gray-300/70 rounded-3xl outline-none focus:ring-1 resize-none min-h-[40px] sm:min-h-[46px] bg-white/90 backdrop-blur-sm shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed text-sm sm:text-base transition-all duration-200 [&::-webkit-scrollbar]:hidden"
                     style={{
                       '--tw-ring-color': '#332771',
                       borderColor: 'rgba(209, 213, 219, 0.7)',
-                      lineHeight: "1.5"
+                      lineHeight: "1.5",
+                      scrollbarWidth: 'none',
+                      msOverflowStyle: 'none'
                     }}
                     onFocus={(e) => e.target.style.borderColor = '#332771'}
                     onBlur={(e) => e.target.style.borderColor = 'rgba(209, 213, 219, 0.7)'}
@@ -252,7 +309,7 @@ export default function ChatPage() {
                       !input.trim() ||
                       isLoadingChat
                     }
-                    className="absolute cursor-pointer right-2 bottom-3 p-2 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20"
+                    className="absolute cursor-pointer right-1.5 sm:right-2 bottom-2.5 sm:bottom-3 p-1.5 sm:p-2 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20"
                     style={{
                       backgroundColor: input.trim() && !isLoadingChat 
                         ? '#332771' 
@@ -280,12 +337,12 @@ export default function ChatPage() {
                       }
                     }}
                   >
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               </div>
 
-              <div className="text-xs text-gray-500 text-center mt-2">
+              <div className="text-xs text-gray-500 text-center mt-1 sm:mt-2 px-2">
                 Mindefy AI can make mistakes. Consider checking important
                 information.
               </div>
