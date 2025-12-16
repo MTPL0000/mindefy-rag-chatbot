@@ -32,7 +32,7 @@ export const useChatStore = create(
               id: Date.now(),
               role: "assistant",
               content:
-                "Welcome to Mindefy AI! I'm here to help you with mindfulness and sustainable living. How can I assist you today?",
+                "Welcome to Mindefy AI ! How can I assist you today?",
               timestamp: new Date().toISOString(),
             },
           ],
@@ -63,11 +63,11 @@ export const useChatStore = create(
         // Send to backend (no chat ID for new session each time)
         const response = await chatService.sendMessage(userInput);
 
-        // Add bot response
+        // Add bot response - extract answer from new API response format
         const botMessage = {
           id: Date.now() + 1,
           role: "assistant",
-          content: response.response,
+          content: response.answer || response.response || "I'm sorry, I couldn't process your request.",
           timestamp: new Date().toISOString(),
         };
 
@@ -111,7 +111,7 @@ export const useChatStore = create(
             id: Date.now(),
             role: "assistant",
             content:
-              "Welcome to Mindefy AI! I'm here to help you with mindfulness and sustainable living. How can I assist you today?",
+              "Welcome to Mindefy AI ! How can I assist you today?",
             timestamp: new Date().toISOString(),
           },
         ],

@@ -11,9 +11,9 @@ export const chatService = {
    * @returns {Promise<{response: string}>}
    */
   async sendMessage(userInput) {
-    return apiService.fetchWithAuth("/chat", {
+    return apiService.fetchWithAuth("/rag-chat", {
       method: "POST",
-      body: JSON.stringify({ user_input: userInput }),
+      body: JSON.stringify({ message: userInput }),
     });
   },
 };

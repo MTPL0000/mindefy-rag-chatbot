@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
 import Header from "@/components/Header";
@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import { Toaster, toast } from "react-hot-toast";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { pdfService } from "@/lib/pdf-service";
 import {
   Upload,
   FileText,
@@ -22,33 +23,102 @@ export default function PDFAdminPage() {
   const { user } = useAuthStore();
   
   // State for PDF management
-  const [currentPDF, setCurrentPDF] = useState({
-    name: "sample-document.pdf",
-    size: "2.4 MB",
-    uploadDate: "2024-12-12",
-    url: "/sample-pdf-url" // This would come from your API
-  });
+  const [currentPDF, setCurrentPDF] = useState(null); // Start with no PDF
   const [newPDF, setNewPDF] = useState(null); // For preview before replacement
   const [isReplacing, setIsReplacing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showDeleteNewModal, setShowDeleteNewModal] = useState(false);
   const [showReplaceModal, setShowReplaceModal] = useState(false);
 
+  // Fetch current PDF info on component mount
+  useEffect(() => {
+    fetchCurrentPDFInfo();
+  }, []);
+
+  // Fetch current PDF information from backend
+  const fetchCurrentPDFInfo = async () => {
+    setIsLoading(true);
+    try {
+      const configStatus = pdfService.getConfigStatus();
+      if (!configStatus.isConfigured) {
+        toast.error(configStatus.error);
+        setCurrentPDF(null);
+        return;
+      }
+
+      const pdfInfo = await pdfService.getCurrentPDFInfo();
+      setCurrentPDF(pdfInfo);
+    } catch (error) {
+      console.error('Error fetching PDF info:', error);
+      if (error.message.includes('No authentication token')) {
+        toast.error('Authentication required. Please log in again.');
+      } else {
+        toast.error('Failed to fetch PDF info. Please check your connection and try again.');
+      }
+      setCurrentPDF(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Handle file selection for preview
-  const handleFileSelect = (event) => {
+  const handleFileSelect = async (event) => {
     const file = event.target.files[0];
-    if (file && file.type === "application/pdf") {
+    if (!file) return;
+    
+    // Validate file using service
+    const validation = pdfService.validatePDFFile(file);
+    if (!validation.isValid) {
+      toast.error(validation.error);
+      event.target.value = '';
+      return;
+    }
+    
+    // If no current PDF exists, upload directly
+    if (!currentPDF) {
+      await uploadPDFDirectly(file);
+    } else {
+      // Show preview for replacement
       setNewPDF({
         file: file,
         name: file.name,
         size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
         url: URL.createObjectURL(file)
       });
-      toast.success("PDF uploaded for preview. Review and click Replace to confirm.");
-    } else {
-      toast.error("Please select a valid PDF file");
+      toast.success("PDF uploaded for preview. Review and click replace to confirm.");
     }
+    
     // Reset file input
     event.target.value = '';
+  };
+
+  // Handle direct PDF upload (when no current PDF exists)
+  const uploadPDFDirectly = async (file) => {
+    setIsReplacing(true);
+    try {
+      const data = await pdfService.uploadPDF(file);
+      
+      // Set current PDF with the uploaded one
+      setCurrentPDF({
+        name: data.filename,
+        size: data.formattedSize,
+        uploadDate: data.uploadDate,
+        url: data.url,
+        previewUrl: data.previewUrl,
+        chunksCount: data.chunksCount
+      });
+      
+      toast.success(`PDF uploaded successfully!`);
+    } catch (error) {
+      console.error('PDF upload error:', error);
+      if (error.message.includes('No authentication token')) {
+        toast.error('Authentication required. Please log in again.');
+      } else {
+        toast.error(error.message || "Failed to upload PDF");
+      }
+    } finally {
+      setIsReplacing(false);
+    }
   };
 
   // Handle PDF replacement via API
@@ -57,32 +127,33 @@ export default function PDFAdminPage() {
     
     setIsReplacing(true);
     try {
-      // TODO: Integrate with your backend API
-      const formData = new FormData();
-      formData.append('pdf', newPDF.file);
-      // const response = await fetch('/api/admin/replace-pdf', {
-      //   method: 'POST',
-      //   body: formData
-      // });
-      
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const data = await pdfService.uploadPDF(newPDF.file);
       
       // Update current PDF with the new one
       setCurrentPDF({
-        name: newPDF.name,
-        size: newPDF.size,
-        uploadDate: new Date().toISOString().split('T')[0],
-        url: newPDF.url
+        name: data.filename,
+        size: data.formattedSize,
+        uploadDate: data.uploadDate,
+        url: data.url,
+        previewUrl: data.previewUrl,
+        chunksCount: data.chunksCount
       });
       
       // Clear the new PDF preview
+      if (newPDF?.url) {
+        URL.revokeObjectURL(newPDF.url);
+      }
       setNewPDF(null);
       
       toast.success("PDF replaced successfully!");
       setShowReplaceModal(false);
     } catch (error) {
-      toast.error("Failed to replace PDF");
+      console.error('PDF upload error:', error);
+      if (error.message.includes('No authentication token')) {
+        toast.error('Authentication required. Please log in again.');
+      } else {
+        toast.error(error.message || "Failed to upload PDF");
+      }
     } finally {
       setIsReplacing(false);
     }
@@ -99,9 +170,31 @@ export default function PDFAdminPage() {
   };
 
   // Handle PDF preview
-  const handlePreviewPDF = () => {
-    if (currentPDF?.url) {
-      window.open(currentPDF.url, '_blank');
+  const handlePreviewPDF = async () => {
+    try {
+      await pdfService.openPreview();
+    } catch (error) {
+      console.error('Preview error:', error);
+      if (error.message.includes('No authentication token')) {
+        toast.error('Authentication required. Please log in again.');
+      } else {
+        toast.error('Failed to open PDF preview. Please try again.');
+      }
+    }
+  };
+
+  // Handle PDF download
+  const handleDownloadPDF = async () => {
+    try {
+      await pdfService.downloadPDF(currentPDF?.name || 'document.pdf');
+      toast.success('PDF download started');
+    } catch (error) {
+      console.error('Download error:', error);
+      if (error.message.includes('No authentication token')) {
+        toast.error('Authentication required. Please log in again.');
+      } else {
+        toast.error('Failed to download PDF. Please try again.');
+      }
     }
   };
 
@@ -208,7 +301,19 @@ export default function PDFAdminPage() {
 
             {/* Content */}
             <div className="p-4 sm:p-6">
-              {currentPDF ? (
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center mb-4 sm:mb-6" style={{backgroundColor: 'rgba(51, 39, 113, 0.1)'}}>
+                    <FileText className="w-8 h-8 sm:w-12 sm:h-12 animate-pulse" style={{color: '#332771'}} />
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                    Loading PDF Information...
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-600">
+                    Please wait while we fetch the current PDF details.
+                  </p>
+                </div>
+              ) : currentPDF ? (
                 <div className="space-y-6">
                   {/* Current PDF Info */}
                   <div>
@@ -244,10 +349,7 @@ export default function PDFAdminPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => {
-                              // TODO: Implement download functionality
-                              toast.info("Download functionality will be implemented with API");
-                            }}
+                            onClick={handleDownloadPDF}
                             icon={Download}
                           >
                             Download

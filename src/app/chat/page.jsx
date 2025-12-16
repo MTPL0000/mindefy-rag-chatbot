@@ -159,7 +159,7 @@ export default function ChatPage() {
                   }`}
                 >
                   <div
-                    className={`flex items-start space-x-3 w-full md:max-w-[70%] ${
+                    className={`flex items-start space-x-3 max-w-[85%] sm:max-w-[80%] md:max-w-[70%] ${
                       message.role === "user"
                         ? "flex-row-reverse space-x-reverse"
                         : ""
@@ -184,7 +184,7 @@ export default function ChatPage() {
 
                     {/* Message Content */}
                     <div
-                      className="rounded-2xl px-4 py-2 shadow-sm backdrop-blur-sm border"
+                      className="rounded-2xl px-4 py-2 shadow-sm backdrop-blur-sm border flex-1 min-w-0"
                       style={{
                         ...(message.role === "user" ? {
                           background: 'linear-gradient(135deg, #332771 0%, #4c1d95 100%)',
@@ -202,7 +202,7 @@ export default function ChatPage() {
                         })
                       }}
                     >
-                      <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                      <p className="whitespace-pre-wrap text-sm leading-relaxed break-words overflow-wrap-anywhere">
                         {message.content}
                       </p>
                       <div className="text-xs opacity-70 mt-1 flex items-center justify-between">
