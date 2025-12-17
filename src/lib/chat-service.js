@@ -4,6 +4,21 @@ import { apiService } from "./api-service";
  * Chat Service
  * Handles chat messaging
  */
+// Helper function to check if error is PDF-related
+const isPDFError = (message) => {
+  return message.includes('No document uploaded') || 
+         message.includes('No PDF') || 
+         message.includes('PDF not found') || 
+         message.includes('document not available') ||
+         message.includes('Please upload a PDF first');
+};
+
+// Helper function to return PDF error response
+const getPDFErrorResponse = () => ({
+  answer: "No Knowledge Base Connected - Please upload a document to create your knowledge base and start asking questions.",
+  sources: []
+});
+
 export const chatService = {
   /**
    * Send a chat message
@@ -11,10 +26,48 @@ export const chatService = {
    * @returns {Promise<{response: string}>}
    */
   async sendMessage(userInput) {
-    return apiService.fetchWithAuth("/rag-chat", {
-      method: "POST",
-      body: JSON.stringify({ message: userInput }),
-    });
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${apiService.baseURL}/rag-chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ message: userInput }),
+      });
+
+      if (!response.ok) {
+        let message = `HTTP ${response.status}`;
+        try {
+          const err = await response.json();
+          message = err.detail || err.message || message;
+        } catch {
+          message = response.statusText || message;
+        }
+        
+        // Handle PDF-related errors gracefully
+        if (isPDFError(message)) {
+          return getPDFErrorResponse();
+        }
+        
+        throw new Error(message);
+      }
+
+      return await response.json();
+    } catch (error) {
+      // Handle PDF-related network errors
+      if (isPDFError(error.message)) {
+        return getPDFErrorResponse();
+      }
+      
+      // For other errors, re-throw to be handled by the chat store
+      throw error;
+    }
   },
 
   /**

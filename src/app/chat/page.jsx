@@ -5,6 +5,7 @@ import {
   Send,
   Plus,
   Bot,
+  Check,
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { useChatStore } from "@/store/chat-store";
@@ -25,8 +26,21 @@ export default function ChatPage() {
   } = useChatStore();
 
   const [input, setInput] = useState("");
+  const [selectedModel, setSelectedModel] = useState("gpt-4");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  // Available AI models
+  const models = [
+    { value: "gpt-4", label: "GPT-4 Turbo", description: "Most capable model" },
+    { value: "gpt-3.5", label: "GPT-3.5 Turbo", description: "Fast and efficient" },
+    { value: "claude-3", label: "Claude 3 Sonnet", description: "Balanced performance" },
+    { value: "claude-3-haiku", label: "Claude 3 Haiku", description: "Quick responses" },
+    { value: "gemini-pro", label: "Gemini Pro", description: "Google's advanced model" },
+    { value: "llama-2", label: "Llama 2 70B", description: "Open source model" },
+  ];
 
   // Initialize data
   useEffect(() => {
@@ -38,6 +52,32 @@ export default function ChatPage() {
   useEffect(() => {
     adjustTextareaHeight();
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Get selected model label
+  const getSelectedModelLabel = () => {
+    const model = models.find(m => m.value === selectedModel);
+    return model ? model.label : 'Select Model';
+  };
+
+  // Handle model selection
+  const handleModelSelect = (modelValue) => {
+    setSelectedModel(modelValue);
+    setIsDropdownOpen(false);
+  };
 
   // Show error toasts
   useEffect(() => {
@@ -143,9 +183,93 @@ export default function ChatPage() {
           {/* Main chat area - centered and full width */}
           <div className="w-full max-w-4xl mx-auto flex flex-col bg-white/90 backdrop-blur-sm rounded-lg shadow-2xl border border-white/20" style={{boxShadow: '0 25px 50px -12px rgba(51, 39, 113, 0.15), 0 0 0 1px rgba(51, 39, 113, 0.05)'}}>
             {/* Chat header */}
-            <div className="border-b border-gray-200/50 p-3 sm:p-4 bg-white/80 backdrop-blur-md rounded-t-lg">
-              <div className="flex items-center justify-center">
-                <h1 className="text-lg sm:text-xl font-semibold text-gray-800">Mindefy AI Chat</h1>
+            <div className="border-b border-gray-200/50 p-3 sm:p-4 bg-white/80 backdrop-blur-md rounded-t-lg" style={{ position: 'relative', zIndex: 10 }}>
+              <div className="flex items-center justify-between w-full gap-2">
+                {/* Left: Model Dropdown */}
+                <div ref={dropdownRef} className="flex-shrink-0">
+                  <div className="relative">
+                    {/* Custom Dropdown Button */}
+                    <button
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="text-xs sm:text-sm px-2 py-1.5 sm:px-4 sm:py-2.5 border border-gray-200/60 rounded-lg bg-white/90 backdrop-blur-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-purple-500/30 focus:border-purple-500 pr-5 sm:pr-8 hover:bg-gray-50/50 transition-all duration-200 flex items-center"
+                      style={{ 
+                        '--tw-ring-color': '#332771',
+                        borderColor: 'rgba(173, 182, 199, 0.6)',
+                        width: 'auto',
+                        maxWidth: '160px',
+                        minWidth: '100px'
+                      }}
+                    >
+                      <span className="truncate text-xs sm:text-sm">{getSelectedModelLabel()}</span>
+                    </button>
+                    
+                    {/* Dropdown Arrow */}
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-1.5 sm:pr-2 pointer-events-none">
+                      <svg 
+                        className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+
+                    {/* Custom Dropdown Menu */}
+                    {isDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-1 w-36 sm:w-40 bg-white border border-gray-200/60 rounded-lg shadow-lg overflow-hidden" style={{ zIndex: 9999 }}>
+                        {models.map((model) => (
+                          <button
+                            key={model.value}
+                            onClick={() => handleModelSelect(model.value)}
+                            className={`w-full text-left px-2.5 py-1.5 text-xs hover:bg-purple-50 transition-colors duration-150 flex items-center justify-between ${
+                              selectedModel === model.value 
+                                ? 'bg-purple-50 font-medium text-purple-700' 
+                                : 'text-gray-700 font-normal'
+                            }`}
+                          >
+                            <span className="truncate text-xs">{model.label}</span>
+                            {selectedModel === model.value && (
+                              <Check className="w-2.5 h-2.5 text-purple-600 flex-shrink-0 ml-1" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Center: Title */}
+                <div className="flex-1 flex justify-center min-w-0 px-2">
+                  <h1 className="text-sm sm:text-lg md:text-xl font-semibold text-gray-800 truncate">Mindefy Knowledge Assistant</h1>
+                </div>
+
+                {/* Right: New Chat Button */}
+                <div className="flex-shrink-0">
+                  <button
+                    onClick={handleStartNewChat}
+                    className="cursor-pointer flex items-center space-x-1 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 hover:shadow-md transform hover:scale-105 backdrop-blur-sm border"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      borderColor: '#332771',
+                      color: '#332771'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d93311';
+                      e.currentTarget.style.color = 'white';
+                      e.currentTarget.style.borderColor = '#d93311';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
+                      e.currentTarget.style.color = '#332771';
+                      e.currentTarget.style.borderColor = '#332771';
+                    }}
+                  >
+                    <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">New Chat</span>
+                    <span className="sm:hidden">New</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -254,32 +378,6 @@ export default function ChatPage() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* New Chat Button - Integrated in Input Area */}
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
-              <button
-                onClick={handleStartNewChat}
-                className="cursor-pointer flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 backdrop-blur-sm border"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: '#332771',
-                  color: '#332771'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#d93311';
-                  e.currentTarget.style.color = 'white';
-                  e.currentTarget.style.borderColor = '#d93311';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
-                  e.currentTarget.style.color = '#332771';
-                  e.currentTarget.style.borderColor = '#332771';
-                }}
-              >
-                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">New Chat</span>
-                <span className="sm:hidden">New</span>
-              </button>
-            </div>
 
             {/* Input area */}
             <div className="border-t border-gray-200/50 p-3 sm:p-4 md:p-6 bg-white/80 backdrop-blur-md">
@@ -290,7 +388,7 @@ export default function ChatPage() {
                     value={input}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ask Mindefy AI..."
+                    placeholder="Ask a question from your knowledge base…"
                     className="w-full text-black px-3 sm:px-4 py-2 pr-10 sm:pr-12 border-1 border-gray-300/70 rounded-3xl outline-none focus:ring-1 resize-none min-h-[40px] sm:min-h-[46px] bg-white/90 backdrop-blur-sm shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed text-sm sm:text-base transition-all duration-200 [&::-webkit-scrollbar]:hidden"
                     style={{
                       '--tw-ring-color': '#332771',
@@ -343,8 +441,7 @@ export default function ChatPage() {
               </div>
 
               <div className="text-xs text-gray-500 text-center mt-1 sm:mt-2 px-2">
-                Mindefy AI can make mistakes. Consider checking important
-                information.
+                Answers are generated only from your uploaded knowledge base
               </div>
             </div>
           </div>
