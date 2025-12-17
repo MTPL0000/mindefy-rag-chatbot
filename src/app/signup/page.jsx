@@ -91,7 +91,7 @@ export default function SignupForm() {
               className="rounded-full"
             />
           </div>
-          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>Mindefy AI</h1>
+          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>Ask Docs</h1>
           <p className="text-sm mt-2" style={{color: 'rgba(51, 39, 113, 0.7)'}}>
             Start your wellness journey today
           </p>

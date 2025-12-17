@@ -339,7 +339,7 @@ export default function ChatPage() {
                         </span>
                         {message.role === "assistant" && !message.isError && (
                           <span className="text-xs px-2 py-1 rounded-full shadow-sm" style={{backgroundColor: 'rgba(51, 39, 113, 0.1)', color: '#332771'}}>
-                            Mindefy AI
+                            Ask Docs
                           </span>
                         )}
                       </div>

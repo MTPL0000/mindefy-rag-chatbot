@@ -43,7 +43,7 @@ const Header = () => {
               className=""
             />
             <span className="ml-2 text-xl font-bold" style={{color: '#332771'}}>
-              Mindefy AI
+              Ask Docs
             </span>
           </Link>
 
