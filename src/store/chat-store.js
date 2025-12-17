@@ -45,7 +45,7 @@ export const useChatStore = create(
                   id: Date.now(),
                   role: "assistant",
                   content:
-                    "Welcome to Mindefy AI ! How can I assist you today?",
+                    "Welcome to Ask Docs !! I answer questions using your uploaded knowledge base. Ask anything about your documents.",
                   timestamp: new Date().toISOString(),
                 },
               ],
@@ -211,7 +211,7 @@ export const useChatStore = create(
               {
                 id: Date.now(),
                 role: "assistant",
-                content: "Welcome to Mindefy AI ! How can I assist you today?",
+                content: "Welcome to Ask Docs !! I answer questions using your uploaded knowledge base. Ask anything about your documents.",
                 timestamp: new Date().toISOString(),
               },
             ],
