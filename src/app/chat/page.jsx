@@ -14,7 +14,7 @@ import Header from "@/components/Header";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function ChatPage() {
-  const { user, fetchUserProfile } = useAuthStore();
+  const { user } = useAuthStore();
   const {
     currentChat,
     isLoadingChat,
@@ -44,7 +44,6 @@ export default function ChatPage() {
 
   // Initialize data
   useEffect(() => {
-    fetchUserProfile();
     initializeWelcomeMessage();
   }, []);
 

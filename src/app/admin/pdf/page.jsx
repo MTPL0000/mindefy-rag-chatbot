@@ -32,34 +32,41 @@ export default function PDFAdminPage() {
 
   // Fetch current PDF info on component mount
   useEffect(() => {
-    fetchCurrentPDFInfo();
-  }, []);
+    let isMounted = true;
+    
+    const loadPDFInfo = async () => {
+      if (!isMounted) return;
+      
+      setIsLoading(true);
+      try {
+        const configStatus = pdfService.getConfigStatus();
+        if (!configStatus.isConfigured) {
+          toast.error(configStatus.error);
+          if (isMounted) setCurrentPDF(null);
+          return;
+        }
 
-  // Fetch current PDF information from backend
-  const fetchCurrentPDFInfo = async () => {
-    setIsLoading(true);
-    try {
-      const configStatus = pdfService.getConfigStatus();
-      if (!configStatus.isConfigured) {
-        toast.error(configStatus.error);
+        const pdfInfo = await pdfService.getCurrentPDFInfo();
+        if (isMounted) setCurrentPDF(pdfInfo);
+      } catch (error) {
+        if (!isMounted) return;
+        if (error.message.includes('No authentication token')) {
+          toast.error('Authentication required. Please log in again.');
+        } else {
+          toast.error('Failed to fetch PDF info. Please check your connection and try again.');
+        }
         setCurrentPDF(null);
-        return;
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
-
-      const pdfInfo = await pdfService.getCurrentPDFInfo();
-      setCurrentPDF(pdfInfo);
-    } catch (error) {
-      console.error('Error fetching PDF info:', error);
-      if (error.message.includes('No authentication token')) {
-        toast.error('Authentication required. Please log in again.');
-      } else {
-        toast.error('Failed to fetch PDF info. Please check your connection and try again.');
-      }
-      setCurrentPDF(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+    
+    loadPDFInfo();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Handle file selection for preview
   const handleFileSelect = async (event) => {
@@ -110,7 +117,6 @@ export default function PDFAdminPage() {
       
       toast.success(`PDF uploaded successfully!`);
     } catch (error) {
-      console.error('PDF upload error:', error);
       if (error.message.includes('No authentication token')) {
         toast.error('Authentication required. Please log in again.');
       } else {
@@ -146,9 +152,7 @@ export default function PDFAdminPage() {
       setNewPDF(null);
       
       toast.success("PDF replaced successfully!");
-      setShowReplaceModal(false);
     } catch (error) {
-      console.error('PDF upload error:', error);
       if (error.message.includes('No authentication token')) {
         toast.error('Authentication required. Please log in again.');
       } else {
@@ -156,6 +160,7 @@ export default function PDFAdminPage() {
       }
     } finally {
       setIsReplacing(false);
+      setShowReplaceModal(false);
     }
   };
 
@@ -187,7 +192,7 @@ export default function PDFAdminPage() {
   const handleDownloadPDF = async () => {
     try {
       await pdfService.downloadPDF(currentPDF?.name || 'document.pdf');
-      toast.success('PDF download started');
+      toast.success('PDF downloaded successfully');
     } catch (error) {
       console.error('Download error:', error);
       if (error.message.includes('No authentication token')) {

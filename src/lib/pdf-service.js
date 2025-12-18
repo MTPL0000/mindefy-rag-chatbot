@@ -5,47 +5,78 @@
 
 import { apiService } from './api-service';
 
+// Cache for PDF info to prevent duplicate API calls
+let pdfInfoCache = undefined;
+let pdfInfoFetchPromise = null;
+
 export const pdfService = {
   /**
    * Get current PDF information
+   * @param {boolean} forceRefresh - Force refresh from API
    * @returns {Promise<Object|null>} PDF info or null if no PDF exists
    */
-  async getCurrentPDFInfo() {
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
-
-      const response = await fetch(`${apiService.baseURL}/admin/pdf/info`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 404) {
-        // No PDF uploaded yet
-        return null;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || `HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        name: data.name,
-        size: data.size_formatted,
-        uploadDate: new Date().toISOString().split('T')[0],
-        url: `${apiService.baseURL}/admin/pdf/preview`,
-        previewUrl: `${apiService.baseURL}/admin/pdf/preview`,
-        rawSize: data.size
-      };
-    } catch (error) {
-      console.error('Error fetching PDF info:', error);
-      throw error;
+  async getCurrentPDFInfo(forceRefresh = false) {
+    // Return cached data if available and not forcing refresh
+    // Note: undefined means not cached, null means no PDF exists (valid cache)
+    if (!forceRefresh && pdfInfoCache !== undefined) {
+      return pdfInfoCache;
     }
+
+    // Return existing promise if a fetch is already in progress
+    if (pdfInfoFetchPromise) {
+      return pdfInfoFetchPromise;
+    }
+
+    pdfInfoFetchPromise = (async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+
+        const response = await fetch(`${apiService.baseURL}/admin/pdf/info`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 404) {
+          // No PDF uploaded yet
+          pdfInfoCache = null;
+          return null;
+        }
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        pdfInfoCache = {
+          name: data.name,
+          size: data.size_formatted,
+          uploadDate: new Date().toISOString().split('T')[0],
+          url: `${apiService.baseURL}/admin/pdf/preview`,
+          previewUrl: `${apiService.baseURL}/admin/pdf/preview`,
+          rawSize: data.size
+        };
+        return pdfInfoCache;
+      } catch (error) {
+        throw error;
+      } finally {
+        pdfInfoFetchPromise = null;
+      }
+    })();
+
+    return pdfInfoFetchPromise;
+  },
+
+  /**
+   * Clear PDF info cache (call after upload/delete)
+   */
+  clearCache() {
+    pdfInfoCache = undefined;
+    pdfInfoFetchPromise = null;
   },
 
   /**
@@ -72,11 +103,37 @@ export const pdfService = {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Upload failed');
+        let errorMessage = 'Upload failed';
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            errorMessage = errorData.detail || errorMessage;
+          } else {
+            const textError = await response.text();
+            if (textError) {
+              errorMessage = textError;
+            }
+          }
+        } catch {
+          // Parsing failed, use status-based message
+        }
+        
+        // Handle common HTTP status codes
+        if (response.status === 413 || errorMessage.toLowerCase().includes('size')) {
+          errorMessage = 'File size limit exceeded. Please upload a smaller file (max 10MB).';
+        }
+        
+        const error = new Error(errorMessage);
+        error.isHandled = true;
+        throw error;
       }
 
       const data = await response.json();
+      
+      // Clear cache after successful upload
+      this.clearCache();
+      
       return {
         filename: data.filename,
         fileSize: data.file_size,
@@ -89,7 +146,6 @@ export const pdfService = {
         previewUrl: `${apiService.baseURL}/admin/pdf/preview`
       };
     } catch (error) {
-      console.error('Error uploading PDF:', error);
       throw error;
     }
   },
