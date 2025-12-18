@@ -201,9 +201,23 @@ export const useAuthStore = create(
     },
 
     // --- User actions ---
-    fetchUserProfile: async () => {
-      const { accessToken } = get();
+    fetchUserProfile: async (forceRefresh = false) => {
+      const { accessToken, currentProfile, isLoadingProfile, user } = get();
       if (!accessToken) return { success: false, error: "No access token" };
+
+      // Return cached data if available and not forcing refresh
+      if (!forceRefresh && currentProfile) {
+        // Ensure user state is synced with currentProfile
+        if (!user || user !== currentProfile) {
+          set({ user: currentProfile });
+        }
+        return { success: true, data: currentProfile };
+      }
+
+      // Prevent duplicate concurrent calls
+      if (isLoadingProfile) {
+        return { success: true, data: currentProfile };
+      }
 
       set({ isLoadingProfile: true, profileError: null });
       try {

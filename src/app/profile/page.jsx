@@ -36,7 +36,7 @@ export default function ProfilePage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
-  // Fetch user profile once
+  // Fetch user profile and populate form
   useEffect(() => {
     const loadProfile = async () => {
       const res = await fetchUserProfile();
@@ -49,9 +49,20 @@ export default function ProfilePage() {
         });
       }
     };
-
     loadProfile();
-  }, [fetchUserProfile]);
+  }, []);
+
+  // Also update form when user changes (e.g., after profile update)
+  useEffect(() => {
+    if (user && user.username) {
+      setFormData({
+        username: user.username || "",
+        email: user.email || "",
+        gender: user.gender || "",
+        dob: user.dob || "",
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     if (successMessage) {
