@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Menu, X, FileText, LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
@@ -8,8 +8,12 @@ import { Toaster, toast } from "react-hot-toast";
 
 const Header = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, fetchUserProfile, logout } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Check if we're on the PDF management page
+  const isOnPdfPage = pathname === '/admin/pdf';
 
   useEffect(() => {
     fetchUserProfile();
@@ -31,8 +35,8 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-gray-200 shadow-sm glass-morphism" style={{background: 'linear-gradient(135deg, rgba(51, 39, 113, 0.12) 0%, rgba(217, 51, 17, 0.16) 100%), rgba(255, 255, 255, 0.6)'}}>
-      <div className="mx-auto px-2 sm:px-3 lg:px-8">
+    <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-gray-200 shadow-sm" style={{background: 'linear-gradient(to right, #FFFFFF, #FFFFFF, #ebdad4)'}}>
+      <div className="mx-auto px-2 sm:px-3 lg:px-8 2xl:max-w-[1400px]">
         <div className="flex justify-between h-16">
           <Link href="/chat" className="flex items-center">
             <Image
@@ -43,36 +47,25 @@ const Header = () => {
               className=""
             />
             <span className="ml-2 text-xl font-bold" style={{color: '#332771'}}>
-              Ask Docs
+              AskDocs
             </span>
           </Link>
 
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            {user?.userType === "admin" && (
+            {user?.userType === "admin" && !isOnPdfPage && (
               <button
                 onClick={() => router.push("/admin/pdf")}
-                className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20"
-                style={{
-                  background: 'linear-gradient(135deg, #332771 0%, #332771 100%)',
-                  boxShadow: '0 2px 8px rgba(51, 39, 113, 0.2)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, #d93311 0%, #d93311 100%)';
-                  e.currentTarget.style.boxShadow = '0 3px 12px rgba(217, 51, 17, 0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, #332771 0%, #332771 100%)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(51, 39, 113, 0.2)';
-                }}
+                className="cursor-pointer px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border-2 border-gray-800 bg-transparent text-gray-800 hover:bg-gray-800 hover:text-white"
               >
                 <span className="flex items-center space-x-2">
-                  <FileText className="h-5 w-5" />
+                  <FileText className="h-4 w-4" />
                   <span>Manage PDF</span>
                 </span>
               </button>
             )}
-            <div className="relative ml-3">
+            {/* Profile icon - commented out for now */}
+            {/* <div className="relative ml-3">
               <div
                 onClick={() => router.push("/profile")}
                 className="flex items-center space-x-2 cursor-pointer group"
@@ -93,29 +86,13 @@ const Header = () => {
                   {getInitials(user?.name || user?.username)}
                 </div>
               </div>
-            </div>
+            </div> */}
             <button
               onClick={handleLogout}
-              className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 backdrop-blur-sm border border-red-200/50"
-              style={{
-                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%)',
-                color: '#d93311'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #d93311 0%, #dc2626 100%)';
-                e.currentTarget.style.color = 'white';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(217, 51, 17, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%)';
-                e.currentTarget.style.color = '#d93311';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
-              }}
+              className="cursor-pointer px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:shadow-sm shadow-sm"
             >
               <span className="flex items-center space-x-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
+                <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </span>
             </button>
@@ -149,7 +126,7 @@ const Header = () => {
                 {getInitials(user?.name || user?.username)}
               </div>
             </div>
-            {user?.userType == "admin" && (
+            {user?.userType == "admin" && !isOnPdfPage && (
               <button
                 onClick={() => {
                   router.push("/admin/pdf");
@@ -163,7 +140,7 @@ const Header = () => {
             )}
             <button
               onClick={handleLogout}
-              className="cursor-pointer border-b flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium hover:bg-red-50 w-full text-left" style={{borderBottomColor: '#332771', color: '#d93311'}}
+              className="cursor-pointer border-b flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 w-full text-left" style={{borderBottomColor: '#332771'}}
             >
               <LogOut className="h-5 w-5" />
               <span>Logout</span>

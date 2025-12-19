@@ -11,7 +11,11 @@ const InputField = ({
   showPasswordToggle = false,
   onTogglePassword,
   showPassword = false,
+  max,
 }) => {
+  const isDateType = type === "date";
+  const hasValue = value && value.length > 0;
+  
   return (
     <div className="space-y-1">
       <div className="relative">
@@ -24,18 +28,22 @@ const InputField = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          max={max}
           className={`
-              w-full pl-10 pr-${showPasswordToggle ? "10" : "4"} py-3 text-black
+              w-full pl-10 pr-${showPasswordToggle ? "10" : "4"} py-3
               border-2 rounded-lg transition-all duration-300 ease-in-out
               focus:outline-none focus:ring-2
+              ${hasValue ? "text-black" : "text-gray-400"}
               ${
                 error
                   ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/20"
                   : "border-gray-200 bg-white hover:border-gray-300"
               }
+              ${isDateType ? "[&::-webkit-calendar-picker-indicator]:opacity-50" : ""}
             `}
           style={{
-            '--tw-ring-color': error ? 'rgba(239, 68, 68, 0.2)' : 'rgba(51, 39, 113, 0.2)'
+            '--tw-ring-color': error ? 'rgba(239, 68, 68, 0.2)' : 'rgba(51, 39, 113, 0.2)',
+            colorScheme: isDateType && !hasValue ? 'light' : 'auto'
           }}
           onFocus={(e) => {
             if (!error) {

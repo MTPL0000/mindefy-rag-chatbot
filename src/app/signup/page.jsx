@@ -79,26 +79,22 @@ export default function SignupForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      {/* Header */}
-      <div className="w-full max-w-md mb-8">
-        <div className="rounded-2xl p-8 text-center mb-2" style={{background: 'linear-gradient(135deg, rgba(51, 39, 113, 0.35) 0%, rgba(217, 51, 17, 0.40) 100%)', border: '1px solid rgba(51, 39, 113, 0.3)'}}>
-          <div className="mx-auto mb-4 flex items-center justify-center">
+      {/* Header with AskDocs branding */}
+      <div className="w-full max-w-md">
+        <div className="text-center mb-6">
+          <div className="mx-auto mb-3 flex items-center justify-center">
             <Image
               src="/logo.svg"
-              alt="Mindefy AI"
-              width={80}
-              height={80}
-              className="rounded-full"
+              alt="AskDocs"
+              width={72}
+              height={72}
             />
           </div>
-          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>Ask Docs</h1>
-          <p className="text-sm mt-2" style={{color: 'rgba(51, 39, 113, 0.7)'}}>
+          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>AskDocs</h1>
+          <p className="text-sm mt-1 text-gray-600">
             Start your wellness journey today
           </p>
         </div>
-      </div>
-
-      <div className="w-full max-w-md">
         {/* Show success message instead of form */}
         {successMessage ? (
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
@@ -115,27 +111,26 @@ export default function SignupForm() {
           </div>
         ) : (
           <>
-            <div className="text-center mb-2">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Create your account
+            <div className="text-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                Create an account
               </h2>
-              <p className="text-gray-600 text-sm">
-                Or{" "}
+              <p className="text-gray-500 text-sm">
+                or{" "}
                 <Link
                   href="/login"
-                  className="font-medium transition-colors duration-200"
+                  className="font-medium underline transition-colors duration-200"
                   style={{color: '#332771'}}
                   onMouseEnter={(e) => e.target.style.color = '#d93311'}
                   onMouseLeave={(e) => e.target.style.color = '#332771'}
                 >
-                  sign in to your account
+                  SignIn
                 </Link>
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="space-y-4">
+            <form className="bg-white rounded-xl shadow-md p-5" onSubmit={handleSubmit}>
+              <div className="space-y-3">
                   <InputField
                     icon={User}
                     type="text"
@@ -143,7 +138,7 @@ export default function SignupForm() {
                     value={formData.username}
                     onChange={handleChange}
                     error={validationErrors.username}
-                    placeholder="Enter your username"
+                    placeholder="Enter username"
                   />
 
                   <InputField
@@ -153,7 +148,7 @@ export default function SignupForm() {
                     value={formData.email}
                     onChange={handleChange}
                     error={validationErrors.email}
-                    placeholder="Enter your email"
+                    placeholder="Enter email"
                   />
 
                   <InputField
@@ -188,7 +183,9 @@ export default function SignupForm() {
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className={`w-full pl-10 pr-4 text-black py-3 border-2 rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
+                      className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
+                        formData.gender ? "text-black" : "text-gray-400"
+                      } ${
                         validationErrors.gender
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200"
@@ -197,14 +194,14 @@ export default function SignupForm() {
                         '--tw-ring-color': validationErrors.gender ? '#ef4444' : '#332771'
                       }}
                     >
-                      <option value="" disabled>
-                        Select your gender
+                      <option value="" disabled hidden>
+                        Select gender
                       </option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
+                      <option value="male" className="text-black">Male</option>
+                      <option value="female" className="text-black">Female</option>
+                      <option value="other" className="text-black">Other</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                       <svg
                         className="w-4 h-4 text-gray-400"
                         fill="none"
@@ -220,25 +217,23 @@ export default function SignupForm() {
                       </svg>
                     </div>
                     {validationErrors.gender && (
-                      <p className="border-red-300 text-red-500 focus:ring-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1">
                         {validationErrors.gender}
                       </p>
                     )}
                   </div>
-                </div>
-                <div className="flex items-center justify-center">
-                  <Button type="submit" isLoading={isLoading} className="w-35">
-                    Sign Up
+                <div className="flex items-center justify-center pt-4">
+                  <Button type="submit" isLoading={isLoading} className="w-full">
+                    SignUp
                   </Button>
                 </div>
-              </form>
-            </div>
+              </div>
+            </form>
           </>
         )}
+        {/* Social Login */}
+        <SocialLoginButtons />
       </div>
-
-      {/* Social Login */}
-      <SocialLoginButtons />
     </div>
   );
 }
