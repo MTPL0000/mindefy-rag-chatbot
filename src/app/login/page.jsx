@@ -58,14 +58,11 @@ export default function LoginForm() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
           <div className="mx-auto mb-3 flex items-center justify-center">
-            <Image
-              src="/logo.svg"
-              alt="AskDocs"
-              width={72}
-              height={72}
-            />
+            <Image src="/logo.svg" alt="AskDocs" width={72} height={72} />
           </div>
-          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>AskDocs</h1>
+          <h1 className="text-xl text-[#332771] font-bold tracking-wide">
+            AskDocs
+          </h1>
           <p className="text-sm mt-1 text-gray-600">
             Welcome back to your wellness journey
           </p>
@@ -80,10 +77,7 @@ export default function LoginForm() {
             or{" "}
             <Link
               href="signup"
-              className="font-medium underline transition-colors duration-200"
-              style={{color: '#332771'}}
-              onMouseEnter={(e) => e.target.style.color = '#d93311'}
-              onMouseLeave={(e) => e.target.style.color = '#332771'}
+              className="font-medium underline text-[#332771] hover:text-[#d93311] transition-colors duration-200"
             >
               SignUp
             </Link>
@@ -123,7 +117,7 @@ export default function LoginForm() {
             )}
 
             <div className="flex items-center justify-center pt-2">
-              <Button type="submit" isLoading={isLoading} className="w-full">
+              <Button type="submit" isLoading={isLoading} className="w-35">
                 SignIn
               </Button>
             </div>

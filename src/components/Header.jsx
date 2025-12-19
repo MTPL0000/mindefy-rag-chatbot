@@ -4,16 +4,16 @@ import Image from "next/image";
 import { Menu, X, FileText, LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import Link from "next/link";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { user, fetchUserProfile, logout } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   // Check if we're on the PDF management page
-  const isOnPdfPage = pathname === '/admin/pdf';
+  const isOnPdfPage = pathname === "/admin/pdf";
 
   useEffect(() => {
     fetchUserProfile();
@@ -35,8 +35,13 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-gray-200 shadow-sm" style={{background: 'linear-gradient(to right, #FFFFFF, #FFFFFF, #ebdad4)'}}>
-      <div className="mx-auto px-2 sm:px-3 lg:px-8 2xl:max-w-[1400px]">
+    <header
+      className="sticky top-0 z-50 backdrop-blur-xl border-b border-gray-200 shadow-sm"
+      style={{
+        background: "linear-gradient(to right, #FFFFFF, #FFFFFF, #ebdad4)",
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-2 py-2 sm:px-3 lg:px-8">
         <div className="flex justify-between h-16">
           <Link href="/chat" className="flex items-center">
             <Image
@@ -46,21 +51,21 @@ const Header = () => {
               height={48}
               className=""
             />
-            <span className="ml-2 text-xl font-bold" style={{color: '#332771'}}>
+            <span className="ml-3 text-xl text-[#332771] font-bold">
               AskDocs
             </span>
           </Link>
 
           {/* Desktop navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             {user?.userType === "admin" && !isOnPdfPage && (
               <button
                 onClick={() => router.push("/admin/pdf")}
-                className="cursor-pointer px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border-2 border-gray-800 bg-transparent text-gray-800 hover:bg-gray-800 hover:text-white"
+                className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium bg-[#332771] text-white transition-all duration-300 shadow-lg hover:bg-[#dc2626] hover:text-white hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20"
               >
                 <span className="flex items-center space-x-2">
                   <FileText className="h-4 w-4" />
-                  <span>Manage PDF</span>
+                  <span>Upload KB</span>
                 </span>
               </button>
             )}
@@ -89,7 +94,7 @@ const Header = () => {
             </div> */}
             <button
               onClick={handleLogout}
-              className="cursor-pointer px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:shadow-sm shadow-sm"
+              className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 text-[#dc2626] shadow-sm hover:bg-[#dc2626] hover:text-white hover:shadow-lg transform hover:scale-105 backdrop-blur-sm border border-red-200/50"
             >
               <span className="flex items-center space-x-2">
                 <LogOut className="w-4 h-4" />
@@ -102,7 +107,8 @@ const Header = () => {
           <div className="flex md:hidden items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset" style={{'--tw-ring-color': '#332771'}}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
+              style={{ "--tw-ring-color": "#332771" }}
             >
               {isMenuOpen ? (
                 <X className="block h-6 w-6" />
@@ -118,29 +124,29 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/60 backdrop-blur-xl shadow-lg glass-morphism rounded-b-lg">
-            <div
+            {/*<div
               onClick={() => router.push("/profile")}
               className="flex items-center space-x-2 px-3 py-2 cursor-pointer"
             >
-              <div className="h-10 w-10 rounded-full flex items-center justify-center text-white font-medium" style={{backgroundColor: '#332771'}}>
+              <div className="h-10 w-10 bg-[#332771] rounded-full flex items-center justify-center text-white font-medium">
                 {getInitials(user?.name || user?.username)}
               </div>
-            </div>
-            {user?.userType == "admin" && !isOnPdfPage && (
+            </div> */}
+            {user?.userType == "admin" && (
               <button
                 onClick={() => {
                   router.push("/admin/pdf");
                   setIsMenuOpen(false);
                 }}
-                className="cursor-pointer border-b flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 w-full text-left" style={{borderBottomColor: '#332771'}}
+                className="cursor-pointer border-b border-[#332771] flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 w-full text-left"
               >
                 <FileText className="h-5 w-5" />
-                <span>Manage PDF</span>
+                <span>Upload KB</span>
               </button>
             )}
             <button
               onClick={handleLogout}
-              className="cursor-pointer border-b flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 w-full text-left" style={{borderBottomColor: '#332771'}}
+              className="cursor-pointer border-b border-[#332771] flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 w-full text-left"
             >
               <LogOut className="h-5 w-5" />
               <span>Logout</span>

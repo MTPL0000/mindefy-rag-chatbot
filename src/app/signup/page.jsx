@@ -9,7 +9,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function SignupForm() {
-
   const { signup, isLoading, error } = useAuthStore();
   const [formData, setFormData] = useState({
     username: "",
@@ -83,14 +82,11 @@ export default function SignupForm() {
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <div className="mx-auto mb-3 flex items-center justify-center">
-            <Image
-              src="/logo.svg"
-              alt="AskDocs"
-              width={72}
-              height={72}
-            />
+            <Image src="/logo.svg" alt="AskDocs" width={72} height={72} />
           </div>
-          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>AskDocs</h1>
+          <h1 className="text-xl text-[#332771] font-bold tracking-wide">
+            AskDocs
+          </h1>
           <p className="text-sm mt-1 text-gray-600">
             Start your wellness journey today
           </p>
@@ -98,13 +94,14 @@ export default function SignupForm() {
         {/* Show success message instead of form */}
         {successMessage ? (
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <p className="font-medium mb-5" style={{color: '#332771'}}>{successMessage}</p>
+            <p
+              className="font-medium mb-5 text-[#332771]"
+            >
+              {successMessage}
+            </p>
             <Link
               href="/login"
-              className="font-medium transition-colors duration-200"
-              style={{color: '#332771'}}
-              onMouseEnter={(e) => e.target.style.color = '#d93311'}
-              onMouseLeave={(e) => e.target.style.color = '#332771'}
+              className="font-medium text-[#332771] hover:text-[#d93311] transition-colors duration-200"
             >
               Sign In
             </Link>
@@ -119,111 +116,119 @@ export default function SignupForm() {
                 or{" "}
                 <Link
                   href="/login"
-                  className="font-medium underline transition-colors duration-200"
-                  style={{color: '#332771'}}
-                  onMouseEnter={(e) => e.target.style.color = '#d93311'}
-                  onMouseLeave={(e) => e.target.style.color = '#332771'}
+                  className="font-medium underline text-[#332771] hover:text-[#d93311] transition-colors duration-200"
                 >
                   SignIn
                 </Link>
               </p>
             </div>
 
-            <form className="bg-white rounded-xl shadow-md p-5" onSubmit={handleSubmit}>
+            <form
+              className="bg-white rounded-xl shadow-md p-5"
+              onSubmit={handleSubmit}
+            >
               <div className="space-y-3">
-                  <InputField
-                    icon={User}
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    error={validationErrors.username}
-                    placeholder="Enter username"
-                  />
+                <InputField
+                  icon={User}
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  error={validationErrors.username}
+                  placeholder="Enter username"
+                />
 
-                  <InputField
-                    icon={Mail}
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    error={validationErrors.email}
-                    placeholder="Enter email"
-                  />
+                <InputField
+                  icon={Mail}
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={validationErrors.email}
+                  placeholder="Enter email"
+                />
 
-                  <InputField
-                    icon={Lock}
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    error={validationErrors.password}
-                    placeholder="Create a password"
-                    showPasswordToggle={true}
-                    onTogglePassword={() => setShowPassword(!showPassword)}
-                    showPassword={showPassword}
-                  />
+                <InputField
+                  icon={Lock}
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={validationErrors.password}
+                  placeholder="Create a password"
+                  showPasswordToggle={true}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                  showPassword={showPassword}
+                />
 
-                  <InputField
-                    icon={Calendar}
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
-                    onChange={handleChange}
-                    error={validationErrors.dob}
-                    placeholder="Date of birth"
-                    max={new Date().toISOString().split("T")[0]}
-                  />
+                <InputField
+                  icon={Calendar}
+                  type="date"
+                  name="dob"
+                  value={formData.dob}
+                  onChange={handleChange}
+                  error={validationErrors.dob}
+                  placeholder="Date of birth"
+                  max={new Date().toISOString().split("T")[0]}
+                />
 
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Users className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <select
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleChange}
-                      className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
-                        formData.gender ? "text-black" : "text-gray-400"
-                      } ${
-                        validationErrors.gender
-                          ? "border-red-300 focus:ring-red-500"
-                          : "border-gray-200"
-                      }`}
-                      style={{
-                        '--tw-ring-color': validationErrors.gender ? '#ef4444' : '#332771'
-                      }}
-                    >
-                      <option value="" disabled hidden>
-                        Select gender
-                      </option>
-                      <option value="male" className="text-black">Male</option>
-                      <option value="female" className="text-black">Female</option>
-                      <option value="other" className="text-black">Other</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
-                    {validationErrors.gender && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {validationErrors.gender}
-                      </p>
-                    )}
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Users className="h-5 w-5 text-gray-400" />
                   </div>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg focus:ring-2 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 appearance-none ${
+                      formData.gender ? "text-black" : "text-gray-400"
+                    } ${
+                      validationErrors.gender
+                        ? "border-red-300 focus:ring-red-500"
+                        : "border-gray-200"
+                    }`}
+                    style={{
+                      "--tw-ring-color": validationErrors.gender
+                        ? "#ef4444"
+                        : "#332771",
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Select gender
+                    </option>
+                    <option value="male" className="text-black">
+                      Male
+                    </option>
+                    <option value="female" className="text-black">
+                      Female
+                    </option>
+                    <option value="other" className="text-black">
+                      Other
+                    </option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                  {validationErrors.gender && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {validationErrors.gender}
+                    </p>
+                  )}
+                </div>
                 <div className="flex items-center justify-center pt-4">
-                  <Button type="submit" isLoading={isLoading} className="w-full">
+                  <Button type="submit" isLoading={isLoading} className="w-35">
                     SignUp
                   </Button>
                 </div>
