@@ -47,11 +47,11 @@ const Header = () => {
             <Image
               src="/logo.svg"
               alt="Mindefy AI"
-              width={48}
-              height={48}
-              className=""
+              width={36}
+              height={36}
+              className="w-9 h-9 sm:w-12 sm:h-12"
             />
-            <span className="ml-3 text-xl text-[#332771] font-bold">
+            <span className="ml-2 sm:ml-3 text-base sm:text-xl text-[#332771] font-bold">
               AskDocs
             </span>
           </Link>

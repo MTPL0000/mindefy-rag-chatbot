@@ -97,9 +97,6 @@ export default function PDFAdminPage() {
         size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
         url: URL.createObjectURL(file),
       });
-      toast.success(
-        "PDF uploaded for preview. Review and click replace to confirm."
-      );
     }
 
     // Reset file input
@@ -219,7 +216,7 @@ export default function PDFAdminPage() {
           position="top-center"
           reverseOrder={false}
           containerStyle={{
-            top: "80px",
+            top: "60px",
           }}
           toastOptions={{
             duration: 4000,
@@ -229,6 +226,10 @@ export default function PDFAdminPage() {
               border: "1px solid #e5e7eb",
               borderRadius: "8px",
               boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+              fontSize: "14px",
+              padding: "12px 16px",
+              maxWidth: "90vw",
+              width: "auto",
             },
             success: {
               style: {

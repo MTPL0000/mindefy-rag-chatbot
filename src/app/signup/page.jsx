@@ -141,7 +141,7 @@ export default function SignupForm() {
             AskDocs
           </h1>
           <p className="text-sm mt-1 text-gray-600">
-            Start your wellness journey today
+            Your knowledge assistant
           </p>
         </div>
         {/* Show success message instead of form */}
