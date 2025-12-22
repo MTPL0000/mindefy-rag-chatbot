@@ -16,6 +16,8 @@ import {
   Trash2,
   Download,
   AlertCircle,
+  Clock,
+  User,
 } from "lucide-react";
 
 export default function PDFAdminPage() {
@@ -52,7 +54,8 @@ export default function PDFAdminPage() {
         if (!isMounted) return;
         if (error.message.includes("No authentication token")) {
           toast.error("Authentication required. Please log in again.");
-        } else {
+        } else if (!error.message.includes("404")) {
+          // Only show error if it's not a 404 (no PDF exists yet)
           toast.error(
             "Failed to fetch PDF info. Please check your connection and try again."
           );
@@ -107,7 +110,8 @@ export default function PDFAdminPage() {
   const uploadPDFDirectly = async (file) => {
     setIsReplacing(true);
     try {
-      const data = await pdfService.uploadPDF(file);
+      const username = user?.name || user?.username || 'Admin';
+      const data = await pdfService.uploadPDF(file, username);
 
       // Set current PDF with the uploaded one
       setCurrentPDF({
@@ -137,7 +141,8 @@ export default function PDFAdminPage() {
 
     setIsReplacing(true);
     try {
-      const data = await pdfService.uploadPDF(newPDF.file);
+      const username = user?.name || user?.username || 'Admin';
+      const data = await pdfService.uploadPDF(newPDF.file, username);
 
       // Update current PDF with the new one
       setCurrentPDF({
@@ -304,7 +309,7 @@ export default function PDFAdminPage() {
                     }}
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Created New
+                    Create New
                   </label>
                 </div>
               </div>
@@ -334,9 +339,14 @@ export default function PDFAdminPage() {
                     <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
                       Active Knowledge Source
                     </h2>
-                    <div className="bg-gray-50 rounded-lg p-4 sm:p-6 border-2 border-[#332771] border-dashed">
+                    <div className="bg-gray-50 rounded-lg p-4 sm:p-6 border-2 border-[#332771] border-dashed relative">
+                      {/* Active Status Chip - Top Right */}
+                      <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                        Active
+                      </span>
                       <div className="flex flex-col space-y-4">
-                        <div className="flex items-start space-x-3 sm:space-x-4">
+                        <div className="flex items-start space-x-3 sm:space-x-4 pr-16 sm:pr-20">
                           <div
                             className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center flex-shrink-0"
                             style={{
@@ -352,13 +362,24 @@ export default function PDFAdminPage() {
                             >
                               {currentPDF.name}
                             </h3>
-                            <div className="text-xs sm:text-sm text-gray-500 space-y-1 mt-2">
-                              <p>Size: {currentPDF.size}</p>
-                              <p>
-                                Uploaded:{" "}
-                                {new Date(
-                                  currentPDF.uploadDate
-                                ).toLocaleDateString()}
+                            <div className="text-xs sm:text-sm text-gray-500 mt-2 space-y-1">
+                              <p className="flex items-center gap-1">
+                                <span className="font-medium text-gray-600">Size:</span> {currentPDF.size}
+                              </p>
+                              <p className="flex items-center gap-1 flex-wrap">
+                                <Clock className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                                <span className="font-medium text-gray-600 whitespace-nowrap">Uploaded:</span>{" "}
+                                <span className="whitespace-nowrap">
+                                  {new Date(currentPDF.uploadDate).toLocaleDateString()}{" "}
+                                  {new Date(currentPDF.uploadDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </p>
+                              <p className="flex items-center gap-1">
+                                <User className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                                <span className="font-medium text-gray-600">Uploaded By:</span>{" "}
+                                <span className="break-words">
+                                  {currentPDF.uploadedBy || user?.name || user?.username || 'Admin'}
+                                </span>
                               </p>
                             </div>
                           </div>
@@ -391,9 +412,14 @@ export default function PDFAdminPage() {
                       <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
                         New Knowledge Source Preview
                       </h2>
-                      <div className="bg-yellow-50 rounded-lg p-4 sm:p-6 border-2 border-dashed border-yellow-300">
+                      <div className="bg-yellow-50 rounded-lg p-4 sm:p-6 border-2 border-dashed border-yellow-300 relative">
+                        {/* Inactive Status Chip - Top Right */}
+                        <span className="absolute top-3 right-3 sm:top-4 sm:right-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span>
+                          Inactive
+                        </span>
                         <div className="flex flex-col space-y-4">
-                          <div className="flex items-start space-x-3 sm:space-x-4">
+                          <div className="flex items-start space-x-3 sm:space-x-4 pr-16 sm:pr-20">
                             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-yellow-100 flex items-center justify-center flex-shrink-0">
                               <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" />
                             </div>
@@ -404,10 +430,12 @@ export default function PDFAdminPage() {
                               >
                                 {newPDF.name}
                               </h3>
-                              <div className="text-xs sm:text-sm text-gray-500 space-y-1 mt-2">
-                                <p>Size: {newPDF.size}</p>
-                                <p className="text-yellow-600 font-medium">
-                                  Ready for New
+                              <div className="text-xs sm:text-sm text-gray-500 mt-2">
+                                <p className="flex items-center gap-1">
+                                  <span className="font-medium text-gray-600">Size:</span> {newPDF.size}
+                                </p>
+                                <p className="text-yellow-600 font-medium mt-1">
+                                  New PDF
                                 </p>
                               </div>
                             </div>
@@ -525,7 +553,7 @@ export default function PDFAdminPage() {
                     }
                   >
                     <Upload className="w-5 h-5 mr-2" />
-                    Upload PDF Document
+                    Create New
                   </label>
                   <input
                     type="file"
