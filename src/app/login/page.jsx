@@ -63,8 +63,8 @@ export default function LoginForm() {
           <h1 className="text-xl text-[#332771] font-bold tracking-wide">
             AskDocs
           </h1>
-          <p className="text-sm mt-1 text-gray-600">
-            Welcome back to your wellness journey
+          <p className="text-sm mt-1 text-black">
+            Welcome back to your smart care space
           </p>
         </div>
 

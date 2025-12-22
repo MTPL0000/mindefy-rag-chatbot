@@ -42,7 +42,7 @@ const Header = () => {
       }}
     >
       <div className="max-w-7xl mx-auto px-2 py-2 sm:px-3 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-14">
           <Link href="/chat" className="flex items-center">
             <Image
               src="/logo.svg"

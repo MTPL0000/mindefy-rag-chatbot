@@ -264,10 +264,10 @@ export default function PDFAdminPage() {
           isLoading={isReplacing}
         />
 
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-6xl mx-auto px-4 py-4 lg:px-8 lg:py-8">
           <div className="bg-white rounded-lg shadow-md">
             {/* Header */}
-            <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
+            <div className="border-b border-gray-200 px-2 sm:px-6 py-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
                   <h1 className="text-xl sm:text-2xl text-[#332771] font-bold">
@@ -277,7 +277,7 @@ export default function PDFAdminPage() {
                     Manage the documents that power your AI’s understanding
                   </p>
                 </div>
-                <div className="flex items-center justify-center sm:justify-end space-x-3">
+                <div className="max-w-fit flex items-center justify-center sm:justify-end space-x-3">
                   <input
                     type="file"
                     accept=".pdf"
@@ -304,7 +304,7 @@ export default function PDFAdminPage() {
                     }}
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Created New
+                    Create New PDF
                   </label>
                 </div>
               </div>
@@ -345,41 +345,51 @@ export default function PDFAdminPage() {
                           >
                             <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-[#332771]" />
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <h3
-                              className="text-base sm:text-lg font-semibold text-gray-900 break-words"
-                              title={currentPDF.name}
-                            >
-                              {currentPDF.name}
-                            </h3>
-                            <div className="text-xs sm:text-sm text-gray-500 space-y-1 mt-2">
-                              <p>Size: {currentPDF.size}</p>
-                              <p>
-                                Uploaded:{" "}
-                                {new Date(
-                                  currentPDF.uploadDate
-                                ).toLocaleDateString()}
-                              </p>
+                          <div className="w-full flex items-start flex-wrap justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <h3
+                                className="text-base sm:text-lg font-semibold text-gray-900 break-words"
+                                title={currentPDF.name}
+                              >
+                                {currentPDF.name}
+                              </h3>
+                              <div className="text-xs sm:text-sm text-gray-500 space-y-1 mt-2">
+                                <p>Size: {currentPDF.size}</p>
+                                <p>
+                                  Uploaded By: {user?.username || ""},{" "}
+                                  {new Date(
+                                    currentPDF.uploadDate
+                                  ).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <div className="mt-4 flex flex-row gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={handlePreviewPDF}
+                                  icon={Eye}
+                                >
+                                  Preview
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={handleDownloadPDF}
+                                  icon={Download}
+                                >
+                                  Download
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="flex flex-col md:flex-row gap-2">
+                              <span className="text-lg font-semibold text-black">
+                                Status:
+                              </span>
+                              <span className="inline-flex items-center rounded-full text-lg font-semibold text-green-500">
+                                Active
+                              </span>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto flex-shrink-0">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handlePreviewPDF}
-                            icon={Eye}
-                          >
-                            Preview
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleDownloadPDF}
-                            icon={Download}
-                          >
-                            Download
-                          </Button>
                         </div>
                       </div>
                     </div>
@@ -392,64 +402,82 @@ export default function PDFAdminPage() {
                         New Knowledge Source Preview
                       </h2>
                       <div className="bg-yellow-50 rounded-lg p-4 sm:p-6 border-2 border-dashed border-yellow-300">
-                        <div className="flex flex-col space-y-4">
-                          <div className="flex items-start space-x-3 sm:space-x-4">
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-yellow-100 flex items-center justify-center flex-shrink-0">
-                              <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <h3
-                                className="text-base sm:text-lg font-semibold text-gray-900 break-words"
-                                title={newPDF.name}
-                              >
-                                {newPDF.name}
-                              </h3>
-                              <div className="text-xs sm:text-sm text-gray-500 space-y-1 mt-2">
-                                <p>Size: {newPDF.size}</p>
-                                <p className="text-yellow-600 font-medium">
-                                  Ready for New
-                                </p>
+                        <div className="w-full flex items-start flex-wrap justify-between gap-3">
+                          <div className="flex flex-col space-y-4">
+                            <div className="flex items-start space-x-3 sm:space-x-4">
+                              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                                <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h3
+                                  className="text-base sm:text-lg font-semibold text-gray-900 break-words"
+                                  title={newPDF.name}
+                                >
+                                  {newPDF.name}
+                                </h3>
+                                <div className="text-xs sm:text-sm text-gray-500 space-y-1 mt-2">
+                                  <p>Size: {newPDF.size}</p>
+                                  <p>
+                                    Uploaded By: {user?.username || ""},{" "}
+                                    {new Date(
+                                      currentPDF.uploadDate
+                                    ).toLocaleDateString()}
+                                  </p>
+                                  <p className="text-yellow-600 font-medium">
+                                    Ready for New
+                                  </p>
+                                </div>
                               </div>
                             </div>
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto flex-shrink-0">
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => setShowReplaceModal(true)}
+                                className="sm:ml-2"
+                              >
+                                Replace Current PDF
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  window.open(newPDF.url, "_blank")
+                                }
+                                icon={Eye}
+                              >
+                                Preview
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const link = document.createElement("a");
+                                  link.href = newPDF.url;
+                                  link.download = newPDF.name;
+                                  link.click();
+                                }}
+                                icon={Download}
+                              >
+                                Download
+                              </Button>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => setShowDeleteNewModal(true)}
+                                icon={Trash2}
+                              >
+                                Remove
+                              </Button>
+                            </div>
                           </div>
-                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto flex-shrink-0">
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => setShowReplaceModal(true)}
-                              className="sm:ml-2"
-                            >
-                              Replace Current PDF
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => window.open(newPDF.url, "_blank")}
-                              icon={Eye}
-                            >
-                              Preview
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                const link = document.createElement("a");
-                                link.href = newPDF.url;
-                                link.download = newPDF.name;
-                                link.click();
-                              }}
-                              icon={Download}
-                            >
-                              Download
-                            </Button>
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => setShowDeleteNewModal(true)}
-                              icon={Trash2}
-                            >
-                              Remove
-                            </Button>
+                          <div className="flex flex-row gap-2">
+                            <span className="text-lg font-semibold text-black">
+                              Status:
+                            </span>
+                            <span className="inline-flex items-center rounded-full text-lg font-semibold text-yellow-500">
+                              Inactive
+                            </span>
                           </div>
                         </div>
                       </div>
