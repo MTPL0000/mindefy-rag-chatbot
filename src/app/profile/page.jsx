@@ -214,7 +214,7 @@ export default function ProfilePage() {
                     value={formData.username}
                     onChange={handleChange}
                     error={validationErrors.username}
-                    placeholder="Enter username"
+                    placeholder="Enter email"
                   />
                 </div>
 

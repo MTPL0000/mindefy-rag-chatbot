@@ -91,6 +91,7 @@ export default function ChatPage() {
   const [selectedModel, setSelectedModel] = useState("gpt-4");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [feedbackState, setFeedbackState] = useState({}); // Track feedback for each message
+  const [copiedMessageId, setCopiedMessageId] = useState(null); // Track which message was copied
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -226,8 +227,13 @@ export default function ChatPage() {
     }
   };
 
-  const handleCopyResponse = (content) => {
+  const handleCopyResponse = (content, messageId) => {
     navigator.clipboard.writeText(content);
+    setCopiedMessageId(messageId);
+    // Reset after 2 seconds
+    setTimeout(() => {
+      setCopiedMessageId(null);
+    }, 2000);
   };
 
   const handleFeedback = (messageId, feedback) => {
@@ -368,7 +374,7 @@ export default function ChatPage() {
               </div>
             ) : (
               /* Chat Messages */
-              <div className="max-w-4xl mx-auto px-2 md:px-4 py-4 space-y-6">
+              <div className="max-w-3xl mx-auto px-2 md:px-4 py-4 space-y-6">
                 {currentChat.map((message, index) => (
                   <div
                     key={message.id || index}
@@ -398,7 +404,7 @@ export default function ChatPage() {
                         }}
                       >
                         {message.role === "user" ? (
-                          <span className="text-sm font-medium">
+                          <span className="text-xs font-medium">
                             {getInitials(user?.username)}
                           </span>
                         ) : (
@@ -440,12 +446,16 @@ export default function ChatPage() {
                           <div className="flex items-center space-x-1 mt-2 ml-1">
                             <button
                               onClick={() =>
-                                handleCopyResponse(message.content)
+                                handleCopyResponse(message.content, message.id)
                               }
                               className="p-1.5 cursor-pointer rounded hover:bg-gray-200/50 transition-colors"
-                              title="Copy response"
+                              title={copiedMessageId === message.id ? "Copied!" : "Copy response"}
                             >
-                              <Copy className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                              {copiedMessageId === message.id ? (
+                                <Check className="w-4 h-4 text-green-500" />
+                              ) : (
+                                <Copy className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                              )}
                             </button>
                             <button
                               onClick={() => handleFeedback(message.id, "good")}
@@ -542,8 +552,8 @@ export default function ChatPage() {
 
           {/* Input area - fixed at bottom */}
           <div className="px-3 sm:px-4 md:px-6 pb-3 sm:pb-4 md:pb-6 pt-0 bg-gray-50">
-            <div className="flex items-end space-x-2 sm:space-x-3">
-              <div className="relative w-full max-w-3xl mx-auto">
+            <div className="flex items-end space-x-2 sm:space-x-3 max-w-3xl mx-auto">
+              <div className="relative w-full">
                 <textarea
                   ref={textareaRef}
                   value={input}

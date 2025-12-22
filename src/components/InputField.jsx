@@ -13,7 +13,6 @@ const InputField = ({
   showPassword = false,
   max,
 }) => {
-  const isDateType = type === "date";
   const hasValue = value && value.length > 0;
   
   return (
@@ -30,20 +29,19 @@ const InputField = ({
           onChange={onChange}
           max={max}
           className={`
-              w-full pl-10 pr-${showPasswordToggle ? "10" : "4"} py-3
-              border-2 rounded-lg transition-all duration-300 ease-in-out
-              focus:outline-none focus:ring-2
-              ${hasValue ? "text-black" : "text-gray-400"}
+              w-full pl-10 py-3 border-2 rounded-lg transition-all duration-300 ease-in-out
+              focus:outline-none focus:ring-2 placeholder:text-gray-400
+              ${showPasswordToggle ? "pr-12" : "pr-4"}
+              ${hasValue ? "text-gray-900" : "text-gray-400"}
               ${
                 error
                   ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-gray-200 bg-white hover:border-gray-300"
+                  : "border-gray-200 bg-gray-50 hover:border-gray-300"
               }
-              ${isDateType ? "[&::-webkit-calendar-picker-indicator]:opacity-50" : ""}
             `}
           style={{
             '--tw-ring-color': error ? 'rgba(239, 68, 68, 0.2)' : 'rgba(51, 39, 113, 0.2)',
-            colorScheme: isDateType && !hasValue ? 'light' : 'auto'
+            colorScheme: 'light'
           }}
           onFocus={(e) => {
             if (!error) {
@@ -59,7 +57,7 @@ const InputField = ({
         {showPasswordToggle && (
           <button
             type="button"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center w-12"
             onClick={onTogglePassword}
           >
             {showPassword ? (
