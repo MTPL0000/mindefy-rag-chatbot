@@ -87,8 +87,8 @@ export default function SignupForm() {
           <h1 className="text-xl text-[#332771] font-bold tracking-wide">
             AskDocs
           </h1>
-          <p className="text-sm mt-1 text-gray-600">
-            Start your wellness journey today
+          <p className="text-sm mt-1 text-black">
+          Start your smart guidance journey today
           </p>
         </div>
         {/* Show success message instead of form */}
