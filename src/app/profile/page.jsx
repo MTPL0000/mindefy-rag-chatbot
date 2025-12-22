@@ -185,7 +185,7 @@ export default function ProfilePage() {
             {/* User Info */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
               <div className="flex items-center space-x-4 mb-4 md:mb-0">
-                <div className="h-10 w-16 md:h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold" style={{backgroundColor: '#332771'}}>
+                <div className="bg-[#332771] h-10 w-16 md:h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold">
                   {getInitials(formData.username || user?.username || "U")}
                 </div>
                 <div>
@@ -214,7 +214,7 @@ export default function ProfilePage() {
                     value={formData.username}
                     onChange={handleChange}
                     error={validationErrors.username}
-                    placeholder="Enter username"
+                    placeholder="Enter email"
                   />
                 </div>
 

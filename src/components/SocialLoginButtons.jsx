@@ -63,7 +63,6 @@ export const SocialLoginButtons = () => {
 
         if (result.success) {
           router.push("/chat");
-          
         } else {
           setError(result.error || "Login failed");
         }
@@ -96,7 +95,7 @@ export const SocialLoginButtons = () => {
           type="button"
           onClick={handleGoogleLogin}
           disabled={isLoading}
-          className="w-full cursor-pointer inline-flex items-center justify-center gap-3 py-3 px-4 border border-gray-300/60 rounded-lg shadow-sm bg-white hover:bg-gray-50 transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="max-w-50 mx-auto cursor-pointer flex items-center justify-center gap-3 py-3 px-4 border border-gray-300/60 rounded-lg shadow-sm bg-white hover:bg-gray-50 transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path

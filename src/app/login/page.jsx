@@ -54,50 +54,41 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      {/* Header with Ask Docs branding */}
-      <div className="w-full max-w-sm mb-8">
-        <div className="rounded-2xl p-8 text-center mb-8" style={{background: 'linear-gradient(135deg, rgba(51, 39, 113, 0.35) 0%, rgba(217, 51, 17, 0.40) 100%)', border: '1px solid rgba(51, 39, 113, 0.3)'}}>
-          <div className="mx-auto mb-4 flex items-center justify-center">
-            <Image
-              src="/logo.svg"
-              alt="Mindefy AI"
-              width={80}
-              height={80}
-              className="rounded-full"
-            />
+      {/* Header with AskDocs branding */}
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-6">
+          <div className="mx-auto mb-3 flex items-center justify-center">
+            <Image src="/logo.svg" alt="AskDocs" width={72} height={72} />
           </div>
-          <h1 className="text-xl font-bold tracking-wide" style={{color: '#332771'}}>Ask Docs</h1>
-          <p className="text-sm mt-2" style={{color: 'rgba(51, 39, 113, 0.7)'}}>
+          <h1 className="text-xl text-[#332771] font-bold tracking-wide">
+            AskDocs
+          </h1>
+          <p className="text-sm mt-1 text-gray-600">
             Welcome back to your wellness journey
           </p>
         </div>
-      </div>
 
-      {/* Login Form */}
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Sign in to your account
+        {/* Login Form */}
+        <div className="text-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">
+            SignIn to your account
           </h2>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-500 text-sm">
             or{" "}
             <Link
               href="signup"
-              className="font-medium transition-colors duration-200"
-              style={{color: '#332771'}}
-              onMouseEnter={(e) => e.target.style.color = '#d93311'}
-              onMouseLeave={(e) => e.target.style.color = '#332771'}
+              className="font-medium underline text-[#332771] hover:text-[#d93311] transition-colors duration-200"
             >
-              create a new account
+              SignUp
             </Link>
           </p>
         </div>
 
         <form
-          className="bg-white rounded-2xl shadow-lg p-6"
+          className="bg-white rounded-xl shadow-md p-5"
           onSubmit={handleSubmit}
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             <InputField
               icon={Mail}
               type="text"
@@ -105,7 +96,7 @@ export default function LoginForm() {
               value={formData.username}
               onChange={handleChange}
               error={validationErrors.username}
-              placeholder="Enter your username"
+              placeholder="Enter email"
             />
 
             <InputField
@@ -115,7 +106,7 @@ export default function LoginForm() {
               value={formData.password}
               onChange={handleChange}
               error={validationErrors.password}
-              placeholder="Enter your password"
+              placeholder="Enter password"
               showPasswordToggle={true}
               onTogglePassword={() => setShowPassword(!showPassword)}
               showPassword={showPassword}
@@ -125,16 +116,17 @@ export default function LoginForm() {
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
 
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center pt-2">
               <Button type="submit" isLoading={isLoading} className="w-35">
-                Sign In
+                SignIn
               </Button>
             </div>
           </div>
         </form>
+
+        {/* Social Login */}
+        <SocialLoginButtons />
       </div>
-      {/* Social Login */}
-      <SocialLoginButtons />
     </div>
   );
 }
