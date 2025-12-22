@@ -64,7 +64,7 @@ export default function LoginForm() {
             AskDocs
           </h1>
           <p className="text-sm mt-1 text-gray-600">
-            Welcome back to your wellness journey
+            Welcome back to your knowledge assistant
           </p>
         </div>
 

@@ -42,6 +42,7 @@ export const pdfService = {
 
         if (response.status === 404) {
           // No PDF uploaded yet
+          console.log('No PDF found (404)');
           pdfInfoCache = null;
           return null;
         }
@@ -52,13 +53,26 @@ export const pdfService = {
         }
 
         const data = await response.json();
+        
+        console.log('Fetched PDF info from backend:', data);
+        
+        // Get upload date and username from localStorage or use defaults
+        const storedUploadDate = localStorage.getItem('pdf_upload_date');
+        const storedUploadedBy = localStorage.getItem('pdf_uploaded_by');
+        const uploadDate = storedUploadDate || data.upload_date || new Date().toISOString();
+        const uploadedBy = storedUploadedBy || data.uploaded_by || 'Admin';
+        
+        console.log('Using - Date:', uploadDate, 'User:', uploadedBy);
+        
         pdfInfoCache = {
           name: data.name,
           size: data.size_formatted,
-          uploadDate: new Date().toISOString().split('T')[0],
+          uploadDate: uploadDate,
+          uploadedBy: uploadedBy,
           url: `${apiService.baseURL}/admin/pdf/preview`,
           previewUrl: `${apiService.baseURL}/admin/pdf/preview`,
-          rawSize: data.size
+          rawSize: data.size,
+          isActive: true
         };
         return pdfInfoCache;
       } catch (error) {
@@ -82,9 +96,10 @@ export const pdfService = {
   /**
    * Upload a new PDF file
    * @param {File} file - PDF file to upload
+   * @param {string} username - Username of the person uploading
    * @returns {Promise<Object>} Upload response data
    */
-  async uploadPDF(file) {
+  async uploadPDF(file, username = 'Admin') {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) {
@@ -131,6 +146,15 @@ export const pdfService = {
 
       const data = await response.json();
       
+      console.log('PDF Upload successful:', data);
+      
+      // Store upload date, time, and username in localStorage
+      const uploadDateTime = new Date().toISOString();
+      localStorage.setItem('pdf_upload_date', uploadDateTime);
+      localStorage.setItem('pdf_uploaded_by', username);
+      
+      console.log('Stored in localStorage - Date:', uploadDateTime, 'User:', username);
+      
       // Clear cache after successful upload
       this.clearCache();
       
@@ -141,7 +165,7 @@ export const pdfService = {
         isUpdate: data.is_update,
         previousChunks: data.previous_chunks,
         formattedSize: `${(data.file_size / (1024 * 1024)).toFixed(1)} MB`,
-        uploadDate: new Date().toISOString().split('T')[0],
+        uploadDate: uploadDateTime,
         url: `${apiService.baseURL}/admin/pdf/preview`,
         previewUrl: `${apiService.baseURL}/admin/pdf/preview`
       };
