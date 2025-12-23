@@ -536,7 +536,7 @@ export default function ChatPage() {
                             className="w-2 h-2 rounded-full animate-bounce"
                             style={{
                               animationDelay: "300ms",
-                              backgroundColor: "#332771",
+                              backgroundColor: "#b8a8a0",
                             }}
                           ></div>
                         </div>
