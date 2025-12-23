@@ -11,7 +11,7 @@ export const SocialLoginButtons = () => {
 
   const handleGoogleLogin = () => {
     const clientId =
-      "234472111378-08t8m08att043it21hgpo4vupfbgqv25.apps.googleusercontent.com";
+      "25466006908-ik4lndu42tv34l8u7sik308t833n6lje.apps.googleusercontent.com";
       
     const redirectUri = `${window.location.origin}/auth/google/callback`;
 

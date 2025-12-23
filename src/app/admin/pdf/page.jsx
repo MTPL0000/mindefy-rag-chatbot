@@ -263,7 +263,7 @@ export default function PDFAdminPage() {
           onClose={() => setShowReplaceModal(false)}
           onConfirm={handleReplacePDF}
           title="Replace PDF"
-          message={`Are you sure you want to replace the current PDF with the New PDF? The change will update your knowledge base .`}
+          message={`Are you sure you want to replace the current PDF with the New PDF? The change will update your knowledge base.`}
           confirmText="Replace"
           cancelText="Cancel"
           variant="primary"
