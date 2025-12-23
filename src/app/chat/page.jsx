@@ -167,14 +167,14 @@ export default function ChatPage() {
       // Handle scrolling behavior with proper padding consideration
       if (textarea.scrollHeight > maxHeight) {
         textarea.style.overflowY = "scroll";
-        textarea.style.paddingRight = isMobile ? "40px" : "48px"; // Ensure space for button
+        textarea.style.paddingRight = isMobile ? "48px" : "56px"; // Ensure space for button
         // Scroll to bottom to show the latest text (like ChatGPT)
         setTimeout(() => {
           textarea.scrollTop = textarea.scrollHeight;
         }, 0);
       } else {
         textarea.style.overflowY = "hidden";
-        textarea.style.paddingRight = isMobile ? "40px" : "48px"; // Consistent padding
+        textarea.style.paddingRight = isMobile ? "48px" : "56px"; // Consistent padding
       }
     }
   };
@@ -218,6 +218,13 @@ export default function ChatPage() {
 
   const handleStartNewChat = () => {
     startNewChat();
+    setInput("");
+    // Reset textarea height to original size
+    if (textareaRef.current) {
+      setTimeout(() => {
+        adjustTextareaHeight();
+      }, 0);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -247,6 +254,8 @@ export default function ChatPage() {
     setInput(question);
     if (textareaRef.current) {
       textareaRef.current.focus();
+      // Trigger resize after setting the input
+      setTimeout(adjustTextareaHeight, 0);
     }
   };
 
@@ -559,14 +568,15 @@ export default function ChatPage() {
                   value={input}
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask a question from your knowledge base…"
-                  className="w-full text-black px-4 py-3 border-1 border-gray-300/70 rounded-3xl outline-none focus:ring-1 resize-none min-h-[46px] sm:min-h-[50px] bg-white/90 backdrop-blur-sm shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed text-sm sm:text-base transition-all duration-200 [&::-webkit-scrollbar]:hidden flex items-center"
+                  placeholder="Ask here …"
+                  className="w-full text-black px-4 py-3 pr-12 sm:pr-14 border-1 border-gray-300/70 rounded-3xl outline-none focus:ring-1 resize-none min-h-[46px] sm:min-h-[50px] bg-white/90 backdrop-blur-sm shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed text-base transition-all duration-200 [&::-webkit-scrollbar]:hidden flex items-center"
                   style={{
                     "--tw-ring-color": "#332771",
                     borderColor: "rgba(209, 213, 219, 0.7)",
                     lineHeight: "1.5",
                     scrollbarWidth: "none",
                     msOverflowStyle: "none",
+                    fontSize: "16px",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "#332771")}
                   onBlur={(e) =>

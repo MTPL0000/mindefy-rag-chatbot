@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Clock,
   User,
+  ArrowLeft,
 } from "lucide-react";
 
 export default function PDFAdminPage() {
@@ -269,17 +270,25 @@ export default function PDFAdminPage() {
           isLoading={isReplacing}
         />
 
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          {/* Back Button - Above Container */}
+          <button
+            onClick={() => router.push('/chat')}
+            className="mb-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200 hover:bg-gray-100 cursor-pointer"
+          >
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          </button>
+
           <div className="bg-white rounded-lg shadow-md">
             {/* Header */}
             <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-                <div>
-                  <h1 className="text-xl sm:text-2xl text-[#332771] font-bold">
-                    Knowledge Base
+                <div className="text-center sm:text-left">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Knowledge Base Management
                   </h1>
                   <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                    Manage the documents that power your AI’s understanding
+                    Manage the documents that power your AI's understanding
                   </p>
                 </div>
                 <div className="flex items-center justify-center sm:justify-end space-x-3">

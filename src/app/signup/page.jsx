@@ -24,12 +24,18 @@ export default function SignupForm() {
   const genderDropdownRef = useRef(null);
   const dateInputRef = useRef(null);
   const [dobDisplay, setDobDisplay] = useState("");
+  const [maxDate, setMaxDate] = useState("");
 
   const genderOptions = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
     { value: "other", label: "Other" },
   ];
+
+  // Set max date on client side to avoid hydration mismatch
+  useEffect(() => {
+    setMaxDate(new Date().toISOString().split("T")[0]);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -70,7 +76,13 @@ export default function SignupForm() {
 
   const openDatePicker = () => {
     if (dateInputRef.current) {
-      dateInputRef.current.showPicker();
+      // Focus first, then try showPicker for better iOS compatibility
+      dateInputRef.current.focus();
+      try {
+        dateInputRef.current.showPicker();
+      } catch (e) {
+        // iOS fallback - focus should trigger the native picker
+      }
     }
   };
 
@@ -124,7 +136,7 @@ export default function SignupForm() {
 
     if (result.success) {
       setSuccessMessage(
-        "Your request has been submitted to the Admin. He will review and approve it. Once approved, you will receive confirmation via email."
+        "User registered successfully"
       );
     }
   };
@@ -240,15 +252,16 @@ export default function SignupForm() {
                     >
                       {dobDisplay || "mm/dd/yyyy"}
                     </button>
-                    {/* Hidden native date input for calendar picker - positioned to open below */}
+                    {/* Hidden native date input for calendar picker */}
                     <input
                       ref={dateInputRef}
                       type="date"
                       name="dob"
                       value={formData.dob}
                       onChange={handleNativeDateChange}
-                      max={new Date().toISOString().split("T")[0]}
-                      className="absolute top-full left-0 opacity-0 w-full h-0 pointer-events-none"
+                      max={maxDate}
+                      className="absolute top-0 left-0 opacity-0 w-0 h-0 pointer-events-none"
+                      style={{ fontSize: "16px" }}
                       tabIndex={-1}
                     />
                     {/* Calendar icon */}
