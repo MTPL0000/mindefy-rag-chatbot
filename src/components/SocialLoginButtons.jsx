@@ -10,8 +10,9 @@ export const SocialLoginButtons = () => {
   const [error, setError] = useState("");
 
   const handleGoogleLogin = () => {
-    const clientId = process.env.NEXT_GOOGLE_CLIENT_ID;
-
+    const clientId =
+      "234472111378-08t8m08att043it21hgpo4vupfbgqv25.apps.googleusercontent.com";
+      
     const redirectUri = `${window.location.origin}/auth/google/callback`;
 
     // Build OAuth URL
