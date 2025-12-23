@@ -176,7 +176,6 @@ export default function PDFAdminPage() {
       URL.revokeObjectURL(newPDF.url);
     }
     setNewPDF(null);
-    toast.success("New PDF removed");
     setShowDeleteNewModal(false);
   };
 
@@ -216,7 +215,7 @@ export default function PDFAdminPage() {
           position="top-center"
           reverseOrder={false}
           containerStyle={{
-            top: "60px",
+            top: "70px",
           }}
           toastOptions={{
             duration: 4000,
@@ -263,7 +262,7 @@ export default function PDFAdminPage() {
           onClose={() => setShowReplaceModal(false)}
           onConfirm={handleReplacePDF}
           title="Replace PDF"
-          message={`Are you sure you want to replace the current PDF with "${newPDF?.name}"? This will call the backend API to update the system.`}
+          message={`Are you sure you want to replace the current PDF with the New PDF? The change will update your knowledge base .`}
           confirmText="Replace"
           cancelText="Cancel"
           variant="primary"
@@ -329,9 +328,34 @@ export default function PDFAdminPage() {
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                     Loading PDF Information...
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-600">
+                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                     Please wait while we fetch the current PDF details.
                   </p>
+                  <div className="flex justify-center">
+                    <div className="flex space-x-1">
+                      <div
+                        className="w-2 h-2 rounded-full animate-bounce"
+                        style={{
+                          backgroundColor: "#ebdad4",
+                          animationDelay: "0ms",
+                        }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 rounded-full animate-bounce"
+                        style={{
+                          backgroundColor: "#d4c4be",
+                          animationDelay: "150ms",
+                        }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 rounded-full animate-bounce"
+                        style={{
+                          backgroundColor: "#b8a8a0",
+                          animationDelay: "300ms",
+                        }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               ) : currentPDF ? (
                 <div className="space-y-6">
@@ -424,7 +448,7 @@ export default function PDFAdminPage() {
                             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-yellow-100 flex items-center justify-center flex-shrink-0">
                               <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" />
                             </div>
-                            <div className="min-w-0 flex-1">
+                            <div className="min-w-0 flex-1 pr-12 sm:pr-0">
                               <h3
                                 className="text-base sm:text-lg font-semibold text-gray-900 break-words"
                                 title={newPDF.name}
@@ -506,21 +530,21 @@ export default function PDFAdminPage() {
                       <div
                         className="w-2 h-2 rounded-full animate-bounce"
                         style={{
-                          backgroundColor: "#332771",
+                          backgroundColor: "#ebdad4",
                           animationDelay: "0ms",
                         }}
                       ></div>
                       <div
                         className="w-2 h-2 rounded-full animate-bounce"
                         style={{
-                          backgroundColor: "#d93311",
+                          backgroundColor: "#d4c4be",
                           animationDelay: "150ms",
                         }}
                       ></div>
                       <div
                         className="w-2 h-2 rounded-full animate-bounce"
                         style={{
-                          backgroundColor: "#332771",
+                          backgroundColor: "#b8a8a0",
                           animationDelay: "300ms",
                         }}
                       ></div>

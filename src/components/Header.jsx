@@ -65,7 +65,7 @@ const Header = () => {
               >
                 <span className="flex items-center space-x-2">
                   <FileText className="h-4 w-4" />
-                  <span>Upload KB</span>
+                  <span>Manage KB</span>
                 </span>
               </button>
             )}
@@ -141,7 +141,7 @@ const Header = () => {
                 className="cursor-pointer border-b border-[#332771] flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 w-full text-left"
               >
                 <FileText className="h-5 w-5" />
-                <span>Upload KB</span>
+                <span>Manage KB</span>
               </button>
             )}
             <button
