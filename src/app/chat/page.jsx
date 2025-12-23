@@ -21,59 +21,60 @@ import { Toaster, toast } from "react-hot-toast";
 import Header from "@/components/Header";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-  // Available AI models  
+// Available AI models
 const models = [
-    { value: "gpt-4", label: "GPT-4 Turbo", description: "Most capable model" },
-    {
-      value: "gpt-3.5",
-      label: "GPT-3.5 Turbo",
-      description: "Fast and efficient",
-    },
-    {
-      value: "claude-3",
-      label: "Claude 3 Sonnet",
-      description: "Balanced performance",
-    },
-    {
-      value: "claude-3-haiku",
-      label: "Claude 3 Haiku",
-      description: "Quick responses",
-    },
-    {
-      value: "gemini-pro",
-      label: "Gemini Pro",
-      description: "Google's advanced model",
-    },
-    {
-      value: "llama-2",
-      label: "Llama 2 70B",
-      description: "Open source model",
-    },
-  ];
+  { value: "gpt-4", label: "GPT-4 Turbo", description: "Most capable model" },
+  {
+    value: "gpt-3.5",
+    label: "GPT-3.5 Turbo",
+    description: "Fast and efficient",
+  },
+  {
+    value: "claude-3",
+    label: "Claude 3 Sonnet",
+    description: "Balanced performance",
+  },
+  {
+    value: "claude-3-haiku",
+    label: "Claude 3 Haiku",
+    description: "Quick responses",
+  },
+  {
+    value: "gemini-pro",
+    label: "Gemini Pro",
+    description: "Google's advanced model",
+  },
+  {
+    value: "llama-2",
+    label: "Llama 2 70B",
+    description: "Open source model",
+  },
+];
 
-    // Sample questions for the welcome screen
+// Sample questions for the welcome screen
 const sampleQuestions = [
-      {
-        icon: FileText,
-        title: "Document Summary",
-        question: "Can you summarize the main points of the document?",
-      },
-      {
-        icon: Search,
-        title: "Find Information",
-        question: "What are the key findings mentioned in the document?",
-      },
-      {
-        icon: HelpCircle,
-        title: "Ask Questions",
-        question: "What policies are outlined in this document?",
-      },
-      {
-        icon: BookOpen,
-        title: "Learn More",
-        question: "Explain the important concepts from the document.",
-      },
-    ];
+  {
+    icon: FileText,
+    title: "Document Summary",
+    question: "Can you summarize the main points of the document?",
+  },
+  {
+    icon: Search,
+    title: "Find Information",
+    question:
+      "What important information is mentioned in the document related to its main topic?",
+  },
+  {
+    icon: HelpCircle,
+    title: "Ask Questions",
+    question: "What policies are outlined in this document?",
+  },
+  {
+    icon: BookOpen,
+    title: "Learn More",
+    question: "Explain the important concepts from the document.",
+  },
+];
 
 export default function ChatPage() {
   const { user } = useAuthStore();
@@ -266,7 +267,7 @@ export default function ChatPage() {
   return (
     <ProtectedRoute>
       <div className="h-screen flex flex-col bg-gray-50">
-        <Header /> 
+        <Header />
 
         {/* Main content area - full width */}
         <div className="flex-1 flex flex-col min-h-0">
@@ -441,7 +442,7 @@ export default function ChatPage() {
                               : {
                                   backgroundColor: "transparent",
                                   color: "#111827",
-                                  paddingTop: "0px"
+                                  paddingTop: "0px",
                                 }),
                           }}
                         >
@@ -458,7 +459,11 @@ export default function ChatPage() {
                                 handleCopyResponse(message.content, message.id)
                               }
                               className="p-1.5 cursor-pointer rounded hover:bg-gray-200/50 transition-colors"
-                              title={copiedMessageId === message.id ? "Copied!" : "Copy response"}
+                              title={
+                                copiedMessageId === message.id
+                                  ? "Copied!"
+                                  : "Copy response"
+                              }
                             >
                               {copiedMessageId === message.id ? (
                                 <Check className="w-4 h-4 text-green-500" />

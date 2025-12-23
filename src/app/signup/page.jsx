@@ -136,7 +136,7 @@ export default function SignupForm() {
 
     if (result.success) {
       setSuccessMessage(
-        "User registered successfully"
+        "You’re all set! Your account has been created successfully. Sign in to start exploring answers powered by your documents."
       );
     }
   };
