@@ -14,6 +14,8 @@ import {
   BookOpen,
   Plus,
   Check,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { useChatStore } from "@/store/chat-store";
@@ -94,9 +96,11 @@ export default function ChatPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [feedbackState, setFeedbackState] = useState({}); // Track feedback for each message
   const [copiedMessageId, setCopiedMessageId] = useState(null); // Track which message was copied
+  const [speakingMessageId, setSpeakingMessageId] = useState(null); // Track which message is being read
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
   const dropdownRef = useRef(null);
+  const speechSynthesisRef = useRef(null);
 
   // Initialize data
   useEffect(() => {
@@ -287,6 +291,67 @@ export default function ChatPage() {
     }
   };
 
+  // Text-to-speech functionality
+  const handleSpeakMessage = (messageId, content) => {
+    // Stop any ongoing speech first
+    window.speechSynthesis.cancel();
+
+    // If clicking on the same message that's playing, stop it
+    if (speakingMessageId === messageId) {
+      setSpeakingMessageId(null);
+      return;
+    }
+
+    // Remove asterisks from content before speaking
+    const cleanContent = content.replace(/\*/g, '');
+
+    // Create speech synthesis utterance
+    const utterance = new SpeechSynthesisUtterance(cleanContent);
+    utterance.rate = 1.5;
+    //utterance.lang = "hi-IN" ;
+    utterance.pitch = 1.0;
+    utterance.volume = 15.0;
+
+    // Set up event handlers
+    utterance.onstart = () => {
+      setSpeakingMessageId(messageId);
+    };
+
+    utterance.onend = () => {
+      setSpeakingMessageId(null);
+    };
+
+    utterance.onerror = (event) => {
+      setSpeakingMessageId(null);
+      // Only show error if it's not a cancellation
+      if (event.error !== 'canceled' && event.error !== 'interrupted') {
+        toast.error('Failed to read message');
+      }
+    };
+
+    // Speak the message
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Cleanup speech synthesis on unmount and page reload
+  useEffect(() => {
+    // Stop audio on page reload/refresh
+    const handleBeforeUnload = () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   const handleStartNewChat = () => {
     startNewChat();
     setInput("");
@@ -410,7 +475,7 @@ export default function ChatPage() {
           </div>
 
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="flex-1 overflow-y-auto min-h-0 scrollbar-hide">
             {isWelcomeScreen ? (
               /* Welcome Screen */
               <div className="flex flex-col items-center justify-center min-h-full px-4 py-4 sm:py-6 md:py-8">
@@ -517,7 +582,7 @@ export default function ChatPage() {
                           }}
                         >
                           <p className="whitespace-pre-wrap text-sm leading-relaxed break-words">
-                            {message.content}
+                            {message.content.replace(/\*/g, '')}
                           </p>
                         </div>
 
@@ -539,6 +604,21 @@ export default function ChatPage() {
                                 <Check className="w-4 h-4 text-green-500" />
                               ) : (
                                 <Copy className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleSpeakMessage(message.id, message.content)}
+                              className="p-1.5 cursor-pointer rounded hover:bg-gray-200/50 transition-colors"
+                              title={
+                                speakingMessageId === message.id
+                                  ? "Stop reading"
+                                  : "Read aloud"
+                              }
+                            >
+                              {speakingMessageId === message.id ? (
+                                <VolumeX className="w-4 h-4 text-[#332771]" />
+                              ) : (
+                                <Volume2 className="w-4 h-4 text-gray-400 hover:text-gray-600" />
                               )}
                             </button>
                             <button
