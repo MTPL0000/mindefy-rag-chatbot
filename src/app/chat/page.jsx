@@ -410,7 +410,7 @@ export default function ChatPage() {
           </div>
 
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="flex-1 overflow-y-auto min-h-0 scrollbar-hide">
             {isWelcomeScreen ? (
               /* Welcome Screen */
               <div className="flex flex-col items-center justify-center min-h-full px-4 py-4 sm:py-6 md:py-8">
