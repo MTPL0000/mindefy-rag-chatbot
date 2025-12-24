@@ -307,10 +307,10 @@ export default function ChatPage() {
 
     // Create speech synthesis utterance
     const utterance = new SpeechSynthesisUtterance(cleanContent);
-    utterance.rate = 1.5;
+    utterance.rate = 1.0;
     //utterance.lang = "hi-IN" ;
     utterance.pitch = 1.0;
-    utterance.volume = 15.0;
+    utterance.volume = 1.0;
 
     // Set up event handlers
     utterance.onstart = () => {
