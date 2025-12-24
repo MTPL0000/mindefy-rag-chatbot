@@ -10,71 +10,30 @@ export const SocialLoginButtons = () => {
   const [error, setError] = useState("");
 
   const handleGoogleLogin = () => {
-    const clientId =
-      "25466006908-ik4lndu42tv34l8u7sik308t833n6lje.apps.googleusercontent.com";
-      
-    const redirectUri = `${window.location.origin}/auth/google/callback`;
-
-    // Build OAuth URL
-    const googleAuthUrl = new URL(
-      "https://accounts.google.com/o/oauth2/v2/auth"
-    );
-    googleAuthUrl.searchParams.append("client_id", clientId);
-    googleAuthUrl.searchParams.append("redirect_uri", redirectUri);
-    googleAuthUrl.searchParams.append("response_type", "token id_token");
-    googleAuthUrl.searchParams.append("scope", "openid email profile");
-    googleAuthUrl.searchParams.append("nonce", Math.random().toString(36));
-
-    // Open popup
+    // Get API URL from environment
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    
+    // Open popup to backend Google OAuth endpoint
+    // Backend will redirect to Google and handle the OAuth flow
     const width = 500;
     const height = 600;
     const left = window.screen.width / 2 - width / 2;
     const top = window.screen.height / 2 - height / 2;
 
     const popup = window.open(
-      googleAuthUrl.toString(),
+      `${apiUrl}/auth/google`,
       "Google Sign In",
       `width=${width},height=${height},left=${left},top=${top}`
     );
-
-    // Listen for callback
-    window.addEventListener("message", handleCallback);
 
     // Check if popup was closed
     const checkPopup = setInterval(() => {
       if (popup && popup.closed) {
         clearInterval(checkPopup);
-        window.removeEventListener("message", handleCallback);
       }
     }, 1000);
   };
 
-  const handleCallback = async (event) => {
-    // Verify origin
-    if (event.origin !== window.location.origin) return;
-
-    if (event.data.type === "GOOGLE_AUTH_SUCCESS") {
-      const { id_token } = event.data;
-
-      try {
-        const result = await socialLogin({
-          provider: "google",
-          id_token,
-        });
-
-        if (result.success) {
-          router.push("/chat");
-        } else {
-          setError(result.error || "Login failed");
-        }
-      } catch (error) {
-        console.error("Google login error:", error);
-        setError("Login failed. Please try again.");
-      }
-
-      window.removeEventListener("message", handleCallback);
-    }
-  };
 
   return (
     <div className="mt-4">
