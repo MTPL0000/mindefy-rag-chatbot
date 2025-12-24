@@ -20,6 +20,7 @@ import { useChatStore } from "@/store/chat-store";
 import { Toaster, toast } from "react-hot-toast";
 import Header from "@/components/Header";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { authService } from "@/lib/auth-service";
 
 // Available AI models
 const models = [
@@ -100,6 +101,75 @@ export default function ChatPage() {
   // Initialize data
   useEffect(() => {
     initializeWelcomeMessage();
+  }, []);
+
+  // Handle OAuth callback - extract tokens from URL query params
+  useEffect(() => {
+    const handleOAuthCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get('access_token');
+      const refreshToken = urlParams.get('refresh_token');
+      const error = urlParams.get('error');
+
+      if (error) {
+        toast.error(`Authentication failed: ${error}`);
+        // Clean URL
+        window.history.replaceState({}, document.title, '/chat');
+        return;
+      }
+
+      if (accessToken && refreshToken) {
+        // Check if this is a popup window (opened by OAuth flow)
+        const isPopup = window.opener && !window.opener.closed;
+
+        // Store tokens directly in localStorage and auth store
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+
+        try {
+          // Fetch user profile using the access token
+          const { getUserProfile } = useAuthStore.getState();
+          const userProfile = await authService.getUserProfile(accessToken);
+          
+          // Store user data
+          localStorage.setItem("user", JSON.stringify(userProfile));
+
+          // Update auth store
+          const { accessToken: currentToken, refreshToken: currentRefresh, user, isAuthenticated, error: authError, ...rest } = useAuthStore.getState();
+          useAuthStore.setState({
+            accessToken,
+            refreshToken,
+            user: userProfile,
+            isAuthenticated: true,
+            error: null,
+          });
+
+          if (isPopup) {
+            // If this is a popup, redirect the parent window and close popup
+            window.opener.location.href = '/chat';
+            window.close();
+          } else {
+            // If this is the main window, just show success message
+            toast.success('Successfully logged in');
+            // Clean URL to remove tokens
+            window.history.replaceState({}, document.title, '/chat');
+          }
+        } catch (error) {
+          console.error('Failed to fetch user profile:', error);
+          toast.error('Login successful but failed to load profile');
+          
+          if (isPopup) {
+            // Close popup even on error
+            window.close();
+          } else {
+            // Clean URL to remove tokens
+            window.history.replaceState({}, document.title, '/chat');
+          }
+        }
+      }
+    };
+
+    handleOAuthCallback();
   }, []);
 
   // Initialize textarea height on mount
