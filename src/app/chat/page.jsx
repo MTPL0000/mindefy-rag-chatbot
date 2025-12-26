@@ -353,6 +353,12 @@ export default function ChatPage() {
   }, []);
 
   const handleStartNewChat = () => {
+    // Stop any ongoing audio
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeakingMessageId(null);
+    
     startNewChat();
     setInput("");
     // Reset textarea height to original size
