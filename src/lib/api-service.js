@@ -67,7 +67,13 @@ export const apiService = {
 
       return await response.text();
     } catch (error) {
-      console.error("API Error:", error);
+      // Only log non-authentication errors to avoid cluttering console
+      if (!error.message.includes('Invalid credentials') && 
+          !error.message.includes('User is deactivated') &&
+          !error.message.includes('HTTP 401') &&
+          !error.message.includes('HTTP 403')) {
+        console.error("API Error:", error);
+      }
       throw error;
     }
   },
@@ -105,7 +111,13 @@ export const apiService = {
 
       return await response.json();
     } catch (error) {
-      console.error("Authenticated API Error:", error);
+      // Only log non-authentication errors to avoid cluttering console
+      if (!error.message.includes('Invalid credentials') && 
+          !error.message.includes('User is deactivated') &&
+          !error.message.includes('HTTP 401') &&
+          !error.message.includes('HTTP 403')) {
+        console.error("Authenticated API Error:", error);
+      }
       throw error;
     }
   },

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useAuthStore } from "@/store/auth-store";
-import { Mail, Lock, User, Calendar, ChevronDown, Check } from "lucide-react";
+import { Mail, Lock, User, Calendar, ChevronDown, Check, CheckCircle } from "lucide-react";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
 import InputField from "@/components/InputField";
 import Button from "@/components/Button";
@@ -136,7 +136,7 @@ export default function SignupForm() {
 
     if (result.success) {
       setSuccessMessage(
-        "You’re all set! Your account has been created successfully. Sign in to start exploring answers powered by your documents."
+        "Account created successfully!"
       );
     }
   };
@@ -158,15 +158,19 @@ export default function SignupForm() {
         </div>
         {/* Show success message instead of form */}
         {successMessage ? (
-          <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <p
-              className="font-medium mb-5 text-[#332771]"
-            >
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="flex justify-center mb-4">
+              <CheckCircle className="w-16 h-16 text-green-500" />
+            </div>
+            <p className="text-lg font-semibold text-gray-900 mb-2">
               {successMessage}
+            </p>
+            <p className="text-sm text-gray-600 mb-6">
+              Please sign in to continue
             </p>
             <Link
               href="/login"
-              className="font-medium text-[#332771] hover:text-[#d93311] transition-colors duration-200"
+              className="inline-block px-6 py-2.5 bg-[#332771] text-white font-medium rounded-lg hover:bg-[#d93311] transition-colors duration-200"
             >
               Sign In
             </Link>
