@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "../store/authStore";
 
 export default function ProtectedRoute({ children }) {
   const router = useRouter();

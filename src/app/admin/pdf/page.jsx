@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth-store";
-import Header from "@/components/Header";
-import Button from "@/components/Button";
-import ConfirmationModal from "@/components/ConfirmationModal";
+import { useAuthStore } from "@/features/rag-chatbot/store/authStore";
+import Header from "@/features/rag-chatbot/components/Header";
+import Button from "@/features/rag-chatbot/components/Button";
+import ConfirmationModal from "@/features/rag-chatbot/components/ConfirmationModal";
 import { Toaster, toast } from "react-hot-toast";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { pdfService } from "@/lib/pdf-service";
+import ProtectedRoute from "@/features/rag-chatbot/components/ProtectedRoute";
+import { pdfService } from "@/features/rag-chatbot/lib/pdf-service";
 import {
   Upload,
   FileText,

@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth-store";
-import Header from "@/components/Header";
-import InputField from "@/components/InputField";
-import Button from "@/components/Button";
-import ConfirmationModal from "@/components/ConfirmationModal";
+import { useAuthStore } from "@/features/rag-chatbot/store/authStore";
+import Header from "@/features/rag-chatbot/components/Header";
+import InputField from "@/features/rag-chatbot/components/InputField";
+import Button from "@/features/rag-chatbot/components/Button";
+import ConfirmationModal from "@/features/rag-chatbot/components/ConfirmationModal";
 import { User, Mail, Calendar, Save, Lock } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "@/features/rag-chatbot/components/ProtectedRoute";
 
 export default function ProfilePage() {
   const router = useRouter();

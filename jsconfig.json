@@ -1,7 +1,16 @@
 {
   "compilerOptions": {
+    "jsx": "preserve",
+    "allowJs": true,
+    "checkJs": false,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/features/movies/*": ["./src/features/movies/*"],
+      "@/features/rag-chatbot/*": ["./src/features/rag-chatbot/*"],
+      "@/features/shared/*": ["./src/features/shared/*"]
     }
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

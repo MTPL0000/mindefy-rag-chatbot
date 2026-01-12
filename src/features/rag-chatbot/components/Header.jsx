@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Menu, X, FileText, LogOut } from "lucide-react";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "../store/authStore";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 

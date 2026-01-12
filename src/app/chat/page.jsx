@@ -17,12 +17,12 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { useAuthStore } from "@/store/auth-store";
-import { useChatStore } from "@/store/chat-store";
+import { useAuthStore } from "@/features/rag-chatbot/store/authStore";
+import { useChatStore } from "@/features/rag-chatbot/store/chatStore";
 import { Toaster, toast } from "react-hot-toast";
-import Header from "@/components/Header";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { authService } from "@/lib/auth-service";
+import Header from "@/features/rag-chatbot/components/Header";
+import ProtectedRoute from "@/features/rag-chatbot/components/ProtectedRoute";
+import { authService } from "@/features/rag-chatbot/lib/auth-service";
 
 // Available AI models
 const models = [

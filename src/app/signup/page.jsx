@@ -1,10 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/features/rag-chatbot/store/authStore";
 import { Mail, Lock, User, Calendar, ChevronDown, Check, CheckCircle } from "lucide-react";
-import SocialLoginButtons from "@/components/SocialLoginButtons";
-import InputField from "@/components/InputField";
-import Button from "@/components/Button";
+import SocialLoginButtons from "@/features/rag-chatbot/components/SocialLoginButtons";
+import InputField from "@/features/rag-chatbot/components/InputField";
+import Button from "@/features/rag-chatbot/components/Button";
 import Link from "next/link";
 import Image from "next/image";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/features/rag-chatbot/store/authStore";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {

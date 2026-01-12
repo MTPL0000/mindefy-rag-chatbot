@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Multi-Feature Portfolio Platform
 
-## Getting Started
+A Next.js application with **feature-based architecture** that combines multiple projects:
+- **RAG Chatbot** - AI-powered chat with document understanding
+- **Movie Recommendations** - Personalized movie discovery system
 
-First, run the development server:
+## 🏗️ Architecture
+
+This project uses a **modular, feature-based structure** designed for scalability and easy integration of new features.
+
+```
+src/
+├── features/                    # Feature modules (isolated & independent)
+│   ├── rag-chatbot/            # RAG Chatbot feature
+│   │   ├── components/         # UI components
+│   │   ├── lib/                # Business logic & services
+│   │   └── store/              # State management
+│   ├── movies/                 # Movie Recommendations feature
+│   │   ├── components/         # UI components
+│   │   ├── lib/                # API & utilities
+│   │   └── types/              # TypeScript types
+│   └── shared/                 # Shared utilities
+│       ├── components/
+│       ├── lib/
+│       └── hooks/
+└── app/                        # Next.js routes
+    ├── (rag-chatbot routes)
+    └── movies/
+```
+
+### Why Feature-Based Architecture?
+
+✅ **Clear Boundaries** - Each feature is self-contained  
+✅ **Easy to Scale** - Add new features without conflicts  
+✅ **Team Collaboration** - Multiple teams can work independently  
+✅ **Maintainable** - Easy to locate and modify code  
+✅ **Reusable** - Share common utilities via `features/shared/`
+
+## 🚀 Getting Started
+
+### Installation
+
+```bash
+npm install
+```
+
+### Environment Setup
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+# RAG Chatbot API
+NEXT_PUBLIC_API_URL=your_rag_api_url
+
+# Movie Recommendation API
+NEXT_PUBLIC_MOVIE_API_URL=your_movie_api_url
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+### Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### RAG Chatbot (`/features/rag-chatbot/`)
+- Authentication & user management
+- AI chat interface with multiple models
+- PDF document upload & processing
+- Admin panel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Routes:**
+- `/` - Home
+- `/login` - Login
+- `/signup` - Signup
+- `/chat` - Chat interface
+- `/profile` - User profile
+- `/admin/pdf` - PDF management
 
-## Deploy on Vercel
+#### Movies (`/features/movies/`)
+- Browse 10,000+ movies
+- Search by title, genre, cast
+- Select movies & get AI recommendations
+- View detailed movie information
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Routes:**
+- `/movies` - Browse & select movies
+- `/movies/movie/:title` - Movie details
+- `/movies/recommendations` - Personalized recommendations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔧 Adding a New Feature
+
+1. **Create feature folder:**
+```bash
+mkdir -p src/features/new-feature/{components,lib,types}
+```
+
+2. **Add your code** in the feature folder
+
+3. **Create index file** for exports:
+```typescript
+// src/features/new-feature/index.ts
+export * from './components';
+export * from './lib';
+```
+
+4. **Add routes** in `src/app/new-feature/`
+
+5. **Import using aliases:**
+```javascript
+import { Component } from '@/features/new-feature/components/Component';
+```
+
+## 📦 Tech Stack
+
+- **Framework:** Next.js 15.5.9 (App Router)
+- **Styling:** Tailwind CSS v4
+- **Icons:** Lucide React
+- **State:** Zustand (RAG Chatbot)
+- **Language:** JavaScript + TypeScript
+
+## 🌐 Deployment
+
+Deployed at: `https://portfolio.mindefy.tech/`
+
+**URL Structure:**
+- RAG Chatbot: `https://portfolio.mindefy.tech/*`
+- Movies: `https://portfolio.mindefy.tech/movies/*`
+
+## 📚 Documentation
+
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Detailed architecture guide
+- [MOVIES_INTEGRATION.md](./MOVIES_INTEGRATION.md) - Movie feature documentation
