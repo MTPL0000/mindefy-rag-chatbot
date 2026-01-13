@@ -48,7 +48,7 @@ export default function LoginForm() {
 
     const result = await login(formData);
     if (result.success) {
-      router.push("/");
+      router.push("/chat");
     }
   };
 

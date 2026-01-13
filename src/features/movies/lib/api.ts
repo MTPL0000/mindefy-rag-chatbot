@@ -1,6 +1,6 @@
 import { Movie, MoviesResponse, MovieDetailsWithSimilarResponse, SearchResponse, PersonalizedRecommendationsResponse, RecommendationRequest } from '@/features/movies/types/movie';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_MOVIE_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/movies` || 'http://localhost:8000/api/movies';
 
 export const movieApi = {
   async getAllMoviesPaginated(skip: number = 0, limit: number = 24): Promise<MoviesResponse> {
