@@ -31,8 +31,6 @@ You will create a **single project** in Vercel to handle all traffic.
 4.  **Environment Variables**:
     Add all environment variables required for **ALL** applications here.
     *   `NEXT_PUBLIC_API_URL` (for backend connections)
-    *   `NEXT_PUBLIC_SUPABASE_URL` (if applicable)
-    *   `NEXT_PUBLIC_SUPABASE_ANON_KEY` (if applicable)
     *   And any other secrets used by AskDocs or Movies apps.
 5.  **Click Deploy**.
 
@@ -65,16 +63,3 @@ When running locally (`npm run dev`), you can access the apps via paths (since y
 *   **Portfolio**: `http://localhost:3000`
 *   **AskDocs**: `http://localhost:3000/askdocs/login`
 *   **Movies**: `http://localhost:3000/movies`
-
-## 6. SEO & Metadata
-
-Each application has its own `layout.js` with specific SEO metadata (Title, Description) to ensure they appear correctly in search results and social shares.
-
-*   **Portfolio**: Professional showcase meta tags.
-*   **AskDocs**: Product-focused meta tags.
-*   **Movies**: Entertainment-focused meta tags.
-
-## 7. Troubleshooting
-
-*   **404 Errors**: If you see a 404, check if the `middleware.js` is correctly rewriting the path.
-*   **Cross-App Links**: Ensure links between apps use absolute URLs (e.g., `https://ask.mindefy.tech`) rather than relative paths, as they live on different domains in production.
