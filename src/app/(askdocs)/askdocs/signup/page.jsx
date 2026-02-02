@@ -152,9 +152,7 @@ export default function SignupForm() {
           <h1 className="text-xl text-[#332771] font-bold tracking-wide">
             AskDocs
           </h1>
-          <p className="text-sm mt-1 text-gray-600">
-            Your knowledge assistant
-          </p>
+          <p className="text-sm mt-1 text-gray-600">Your knowledge assistant</p>
         </div>
         {/* Show success message instead of form */}
         {successMessage ? (
@@ -184,7 +182,7 @@ export default function SignupForm() {
               <p className="text-gray-500 text-sm">
                 or{" "}
                 <Link
-                  href="/login"
+                  href="/askdocs/login"
                   className="font-medium underline text-[#332771] hover:text-[#d93311] transition-colors duration-200"
                 >
                   SignIn
@@ -283,7 +281,9 @@ export default function SignupForm() {
                 <div className="relative" ref={genderDropdownRef}>
                   <button
                     type="button"
-                    onClick={() => setIsGenderDropdownOpen(!isGenderDropdownOpen)}
+                    onClick={() =>
+                      setIsGenderDropdownOpen(!isGenderDropdownOpen)
+                    }
                     className={`w-full pl-10 pr-12 py-3 border-2 rounded-lg transition-all duration-300 ease-in-out
                       focus:outline-none focus:ring-2 text-left flex items-center justify-between
                       ${formData.gender ? "text-gray-900" : "text-gray-400"}
@@ -307,10 +307,12 @@ export default function SignupForm() {
                   </div>
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center w-12 pointer-events-none">
                     <ChevronDown
-                      className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isGenderDropdownOpen ? "rotate-180" : ""}`}
+                      className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+                        isGenderDropdownOpen ? "rotate-180" : ""
+                      }`}
                     />
                   </div>
-                  
+
                   {/* Custom Dropdown Menu */}
                   {isGenderDropdownOpen && (
                     <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
@@ -320,7 +322,11 @@ export default function SignupForm() {
                           type="button"
                           onClick={() => handleGenderSelect(option.value)}
                           className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors duration-150 flex items-center justify-between
-                            ${formData.gender === option.value ? "bg-gray-50 font-medium text-gray-900" : "text-gray-600"}`}
+                            ${
+                              formData.gender === option.value
+                                ? "bg-gray-50 font-medium text-gray-900"
+                                : "text-gray-600"
+                            }`}
                         >
                           <span>{option.label}</span>
                           {formData.gender === option.value && (
@@ -330,7 +336,7 @@ export default function SignupForm() {
                       ))}
                     </div>
                   )}
-                  
+
                   {validationErrors.gender && (
                     <p className="text-red-500 text-sm mt-1">
                       {validationErrors.gender}
