@@ -1,53 +1,80 @@
-# Mindefy Deployment Guide (Single Project)
+# Mindefy Workspace Deployment Guide
 
-This repository is configured as a **Single Next.js Project** that handles multiple domains using Middleware. You will deploy this **once** to Vercel, and it will serve all three applications based on the domain name.
+This repository is configured as a **Monorepo-style Single Next.js Project** that hosts three distinct applications:
+1.  **Portfolio** (Main/Root)
+2.  **AskDocs** (AI Document Assistant)
+3.  **CineSense** (Movie Recommendations)
 
-## 1. Domain Configuration (Hostinger)
+It uses **Next.js Middleware** to route requests from different domains to their respective internal application folders. You only need to deploy this project **ONCE** on Vercel.
 
-You need to configure your DNS settings on Hostinger for your domains.
+## 1. Project Structure
 
-**Using CNAME Records**
-If you want to keep DNS on Hostinger, add CNAME records for each subdomain pointing to `cname.vercel-dns.com`:
-1.  **portfolio.mindefy.tech**
-2.  **ask.mindefy.tech**
-3.  **movie-recommendation.mindefy.tech**
+```
+src/app/
+├── (portfolio)/      # Routes for portfolio.mindefy.tech
+├── (askdocs)/        # Routes for ask.mindefy.tech
+└── (movies)/         # Routes for movie-recommendation.mindefy.tech
+```
 
-## 2. Vercel Deployment Steps
+## 2. Vercel Deployment (One-Time Setup)
 
-You will create **ONLY ONE** project in Vercel.
+You will create a **single project** in Vercel to handle all traffic.
 
-1.  **New Project** -> Import this repository.
-2.  **Project Name**: `mindefy-workspace` (or your choice).
-3.  **Framework Preset**: Next.js.
-4.  **Root Directory**: `./` (Default - Leave empty).
-5.  **Environment Variables**: Add all necessary env vars for ALL apps (AskDocs, Movies, etc.) in this single project.
-6.  **Deploy**.
+1.  **Log in to Vercel** and click **"Add New..."** -> **"Project"**.
+2.  **Import** your Git repository (`mindefy-rag-chatbot`).
+3.  **Configure Project**:
+    *   **Project Name**: `mindefy-workspace` (or any name you prefer).
+    *   **Framework Preset**: Next.js.
+    *   **Root Directory**: `./` (Leave as default).
+    *   **Build Command**: `next build` (Default).
+    *   **Output Directory**: `.next` (Default).
+4.  **Environment Variables**:
+    Add all environment variables required for **ALL** applications here.
+    *   `NEXT_PUBLIC_API_URL` (for backend connections)
+    *   `NEXT_PUBLIC_SUPABASE_URL` (if applicable)
+    *   `NEXT_PUBLIC_SUPABASE_ANON_KEY` (if applicable)
+    *   And any other secrets used by AskDocs or Movies apps.
+5.  **Click Deploy**.
 
-## 3. Vercel Domain Configuration
+## 3. Domain Configuration (Vercel)
 
-Once deployed, go to your **Project Settings -> Domains** on Vercel and add **ALL three domains**:
+Once the project is deployed, you need to connect your custom domains.
 
-1.  `portfolio.mindefy.tech`
-2.  `ask.mindefy.tech`
-3.  `movie-recommendation.mindefy.tech`
+1.  Go to your **Vercel Project Dashboard** -> **Settings** -> **Domains**.
+2.  Add the following domains:
+    *   `portfolio.mindefy.tech` (Main Portfolio)
+    *   `ask.mindefy.tech` (AskDocs App)
+    *   `movie-recommendation.mindefy.tech` (CineSense App)
+3.  Vercel will provide **DNS Records** (usually an A record or CNAME).
+4.  **Log in to Hostinger** (or your DNS provider) and add these records for each subdomain.
 
-## 4. How It Works (Middleware)
+## 4. How It Works (Middleware Logic)
 
-The `middleware.js` file detects which domain the user is visiting and rewrites the request to the correct internal folder:
+The `src/middleware.js` file intelligently routes traffic based on the hostname:
 
--   **portfolio.mindefy.tech** -> Rewrites to `/portfolio` folder.
--   **ask.mindefy.tech** -> Rewrites to `/askdocs` folder.
--   **movie-recommendation.mindefy.tech** -> Rewrites to `/movies` folder.
+*   **`portfolio.mindefy.tech`** request → Middleware serves content from `/src/app/(portfolio)`
+*   **`ask.mindefy.tech`** request → Middleware serves content from `/src/app/(askdocs)`
+*   **`movie-recommendation.mindefy.tech`** request → Middleware serves content from `/src/app/(movies)`
 
-This happens transparently on the server; the user always sees the clean URL (e.g., `ask.mindefy.tech/login`).
+This happens transparently. The user sees the clean URL (e.g., `ask.mindefy.tech/login`), but Next.js serves the correct page internally.
 
 ## 5. Local Development
 
-When running locally (`npm run dev`), the middleware defaults to the **Portfolio** app at `localhost:3000`.
+When running locally (`npm run dev`), you can access the apps via paths (since you don't have subdomains on localhost easily):
 
-To access other apps locally, you can navigate explicitly to their internal paths:
--   **Portfolio**: `http://localhost:3000/portfolio` (or just `/`)
--   **AskDocs**: `http://localhost:3000/askdocs/login`
--   **Movies**: `http://localhost:3000/movies`
+*   **Portfolio**: `http://localhost:3000`
+*   **AskDocs**: `http://localhost:3000/askdocs/login`
+*   **Movies**: `http://localhost:3000/movies`
 
-*Note: In production with custom domains, you won't need to include the folder prefix.*
+## 6. SEO & Metadata
+
+Each application has its own `layout.js` with specific SEO metadata (Title, Description) to ensure they appear correctly in search results and social shares.
+
+*   **Portfolio**: Professional showcase meta tags.
+*   **AskDocs**: Product-focused meta tags.
+*   **Movies**: Entertainment-focused meta tags.
+
+## 7. Troubleshooting
+
+*   **404 Errors**: If you see a 404, check if the `middleware.js` is correctly rewriting the path.
+*   **Cross-App Links**: Ensure links between apps use absolute URLs (e.g., `https://ask.mindefy.tech`) rather than relative paths, as they live on different domains in production.

@@ -12,8 +12,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Ask Doc | Mindefy Portfolio",
-  description: "Ask Doc Created By Mindefy Technologies",
+  title: "AskDocs - Intelligent Document Assistant | Mindefy",
+  description: "AskDocs by Mindefy: Your intelligent AI assistant for document analysis and Q&A. Upload PDFs and get instant, accurate answers using advanced RAG technology.",
+  keywords: ["AskDocs", "AI", "Document Analysis", "PDF Chat", "RAG", "Mindefy", "Artificial Intelligence"],
+  openGraph: {
+    title: "AskDocs - Intelligent Document Assistant",
+    description: "Chat with your documents using AskDocs AI.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {

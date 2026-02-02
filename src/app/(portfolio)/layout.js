@@ -12,8 +12,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Mindefy Portfolio",
-  description: "Mindefy Portfolio",
+  title: "Mindefy - AI & Full Stack Solutions Portfolio",
+  description: "Explore Mindefy's portfolio showcasing cutting-edge AI, Full Stack Web Development, and Mobile App solutions. Transforming ideas into reality with modern technology.",
+  keywords: ["Mindefy", "Portfolio", "AI Development", "Full Stack", "React", "Next.js", "Software Engineering"],
+  openGraph: {
+    title: "Mindefy - AI & Full Stack Solutions Portfolio",
+    description: "Explore Mindefy's portfolio showcasing cutting-edge AI and Full Stack solutions.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -12,8 +12,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Movie Recommendation | Mindefy Portfolio",
-  description: "Movie Recommendation Created By Mindefy Technologies",
+  title: "CineSense - AI Powered Movie Recommendations | Mindefy",
+  description: "CineSense by Mindefy: Discover your next favorite movie with our AI-powered recommendation engine. Get personalized suggestions based on your taste.",
+  keywords: ["CineSense", "Movie Recommendations", "AI Movies", "Personalized Suggestions", "Cinema", "Mindefy"],
+  openGraph: {
+    title: "CineSense - AI Powered Movie Recommendations",
+    description: "Discover your next favorite movie with CineSense AI.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {
