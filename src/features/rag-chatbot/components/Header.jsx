@@ -13,7 +13,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Check if we're on the PDF management page
-  const isOnPdfPage = pathname === "/admin/pdf";
+  const isOnPdfPage = pathname === "/askdocs/admin/pdf";
 
   useEffect(() => {
     fetchUserProfile();
@@ -21,7 +21,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    router.push("/");
+    router.push("/askdocs/login");
     toast.success("Logout successful!");
   };
 
@@ -60,7 +60,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-6">
             {user?.userType === "admin" && !isOnPdfPage && (
               <button
-                onClick={() => router.push("/admin/pdf")}
+                onClick={() => router.push("/askdocs/admin/pdf")}
                 className="cursor-pointer px-4 py-2.5 rounded-xl text-sm font-medium bg-[#332771] text-white transition-all duration-300 shadow-lg hover:bg-[#dc2626] hover:text-white hover:shadow-xl transform hover:scale-105 backdrop-blur-sm border border-white/20"
               >
                 <span className="flex items-center space-x-2">
@@ -126,7 +126,7 @@ const Header = () => {
             {user?.userType == "admin" && !isOnPdfPage && (
               <button
                 onClick={() => {
-                  router.push("/admin/pdf");
+                  router.push("/askdocs/admin/pdf");
                   setIsMenuOpen(false);
                 }}
                 className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 w-full text-left border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"

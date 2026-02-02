@@ -104,7 +104,7 @@ function RecommendationsContent() {
 
   const handleMovieClick = (movie) => {
     const encodedTitle = encodeURIComponent(movie.title);
-    router.push(`/movies/movie/${encodedTitle}`);
+    router.push(`/movies/${encodedTitle}`);
   };
 
   return (

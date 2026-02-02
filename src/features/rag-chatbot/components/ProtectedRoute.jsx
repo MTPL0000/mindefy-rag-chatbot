@@ -18,7 +18,7 @@ export default function ProtectedRoute({ children }) {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (isClient && !isAuthenticated) {
-      router.push("/login");
+      router.replace("/askdocs/login");
     }
   }, [isClient, isAuthenticated, router]);
 

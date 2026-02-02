@@ -273,7 +273,7 @@ export default function PDFAdminPage() {
         <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           {/* Back Button - Above Container */}
           <button
-            onClick={() => router.push('/chat')}
+            onClick={() => router.push('/askdocs/chat')}
             className="mb-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200 hover:bg-gray-100 cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />

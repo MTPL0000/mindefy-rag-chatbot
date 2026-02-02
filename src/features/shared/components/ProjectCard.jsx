@@ -7,7 +7,24 @@ export default function ProjectCard({ title, description, icon: Icon, href, grad
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(href);
+    let targetHref = href;
+    const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+
+    // Handle local development redirects
+    if (isLocalhost) {
+      if (href.includes('ask.mindefy.tech')) {
+        targetHref = '/askdocs/login';
+      } else if (href.includes('movie-recommendation.mindefy.tech')) {
+        targetHref = '/movies';
+      }
+    }
+
+    // Open in new window if it's an external link or one of our projects (rewritten or not)
+    if (targetHref.startsWith('http') || targetHref.startsWith('/askdocs') || targetHref.startsWith('/movies')) {
+      window.open(targetHref, '_blank');
+    } else {
+      router.push(targetHref);
+    }
   };
 
   return (

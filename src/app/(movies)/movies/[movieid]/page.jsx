@@ -19,8 +19,8 @@ export default function MovieDetailsPage() {
   const fetchedRef = useRef(null);
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      const movieTitle = params.id;
+    const fetchMovieDetails = async () => { 
+      const movieTitle = params.movieid;
       
       if (fetchedRef.current === movieTitle) {
         return;
@@ -47,14 +47,14 @@ export default function MovieDetailsPage() {
       }
     };
 
-    if (params.id) {
+    if (params.movieid) {
       fetchMovieDetails();
     }
-  }, [params.id]);
+  }, [params.movieid]);
 
   const handleSimilarMovieClick = (selectedMovie) => {
     const encodedTitle = encodeURIComponent(selectedMovie.title);
-    router.push(`/movies/movie/${encodedTitle}`);
+    router.push(`/movies/${encodedTitle}`);
   };
 
   const toggleWatchlist = () => {

@@ -1,79 +1,63 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(request) {
-  const { pathname } = request.nextUrl;
+  const url = request.nextUrl;
   const hostname = request.headers.get('host') || '';
 
-  // Get environment variables for domain configuration
-  const askDocsUrl = process.env.NEXT_PUBLIC_ASKDOCS_DOMAIN || 'https://askdocs.mindefy.com';
-  const cineSenseUrl = process.env.NEXT_PUBLIC_CINESENSE_DOMAIN || 'https://cinesense.mindefy.com';
-  const mainDomain = process.env.NEXT_PUBLIC_MAIN_DOMAIN || 'https://mindefy.com';
+  // Get current path
+  let path = url.pathname;
 
-  // Extract base hostname without port (for local development)
-  const baseHostname = hostname.split(':')[0];
+  // Define domains
+  // You can use environment variables or hardcode them here
+  const portfolioDomain = 'portfolio.mindefy.tech';
+  const askDocsDomain = 'ask.mindefy.tech';
+  const moviesDomain = 'movie-recommendation.mindefy.tech';
 
-  // Check if we're on a subdomain
-  const isAskDocsDomain = baseHostname.includes('askdocs');
-  const isCineSenseDomain = baseHostname.includes('cinesense');
-  const isMainDomain = !isAskDocsDomain && !isCineSenseDomain;
+  // Check for localhost (development)
+  // We can simulate domains using paths or subdomains if needed, 
+  // but for now let's assume direct mapping or fallback
+  const isDev = hostname.includes('localhost');
 
-  // Define all AskDocs routes (RAG Chatbot project)
-  const askDocsRoutes = [
-    '/login',
-    '/signup',
-    '/chat',
-    '/admin',
-    '/profile',
-    '/auth'
-  ];
+  // Logic for rewriting based on domain
 
-  // Define all CineSense routes (Movie Recommendation project)
-  const cineSenseRoutes = [
-    '/movies',
-    '/recommendations'
-  ];
-
-  // Helper function to check if pathname starts with any route in array
-  const matchesRoute = (path, routes) => {
-    return routes.some(route => path.startsWith(route));
-  };
-
-  // Redirect logic based on current domain and requested path
-  
-  // If on main domain and trying to access project routes, redirect to subdomain
-  if (isMainDomain) {
-    // Redirect AskDocs routes to AskDocs subdomain
-    if (matchesRoute(pathname, askDocsRoutes)) {
-      return NextResponse.redirect(new URL(pathname, askDocsUrl));
-    }
-    // Redirect CineSense routes to CineSense subdomain
-    if (matchesRoute(pathname, cineSenseRoutes)) {
-      return NextResponse.redirect(new URL(pathname, cineSenseUrl));
-    }
+  // 1. Portfolio Domain
+  if (hostname === portfolioDomain) {
+    // Rewrite all requests to /portfolio
+    // e.g. / -> /portfolio
+    // e.g. /about -> /portfolio/about
+    url.pathname = `/portfolio${path === '/' ? '' : path}`;
+    return NextResponse.rewrite(url);
   }
 
-  // If on AskDocs subdomain
-  if (isAskDocsDomain) {
-    // Redirect root to /login
-    if (pathname === '/') {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
-    // Block access to CineSense routes - redirect to main domain
-    if (matchesRoute(pathname, cineSenseRoutes)) {
-      return NextResponse.redirect(new URL('/', mainDomain));
-    }
+  // 2. AskDocs Domain
+  if (hostname === askDocsDomain) {
+    // Rewrite to /askdocs
+    // e.g. /login -> /askdocs/login
+    url.pathname = `/askdocs${path === '/' ? '' : path}`;
+    return NextResponse.rewrite(url);
   }
 
-  // If on CineSense subdomain
-  if (isCineSenseDomain) {
-    // Redirect root to /movies
-    if (pathname === '/') {
-      return NextResponse.redirect(new URL('/movies', request.url));
+  // 3. Movies Domain
+  if (hostname === moviesDomain) {
+    // Rewrite to /movies
+    // e.g. / -> /movies
+    // e.g. /inception -> /movies/inception
+    url.pathname = `/movies${path === '/' ? '' : path}`;
+    return NextResponse.rewrite(url);
+  }
+
+  // Fallback for localhost development
+  // We can map localhost:3000 to Portfolio by default, or provide a way to switch
+  if (isDev) {
+    // For testing purposes, let's allow accessing folders directly or 
+    // default to portfolio if path is root
+    if (path === '/') {
+        url.pathname = '/portfolio';
+        return NextResponse.rewrite(url);
     }
-    // Block access to AskDocs routes - redirect to main domain
-    if (matchesRoute(pathname, askDocsRoutes)) {
-      return NextResponse.redirect(new URL('/', mainDomain));
-    }
+    // If path starts with one of our app prefixes, let it pass (standard Next.js behavior)
+    // If not, we might want to default to one app. 
+    // Let's just leave it standard for dev so you can visit localhost:3000/portfolio etc.
   }
 
   return NextResponse.next();
@@ -87,7 +71,7 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public files (images, etc.)
+     * - public files
      */
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],

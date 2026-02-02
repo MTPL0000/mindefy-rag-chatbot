@@ -234,7 +234,7 @@ export default function MoviesHome() {
       });
     } else {
       const encodedTitle = encodeURIComponent(movie.title);
-      router.push(`/movies/movie/${encodedTitle}`);
+      router.push(`/movies/${encodedTitle}`);
     }
   };
 

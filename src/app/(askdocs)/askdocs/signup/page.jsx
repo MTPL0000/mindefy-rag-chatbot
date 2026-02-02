@@ -169,7 +169,7 @@ export default function SignupForm() {
               Please sign in to continue
             </p>
             <Link
-              href="/login"
+              href="/askdocs/login"
               className="inline-block px-6 py-2.5 bg-[#332771] text-white font-medium rounded-lg hover:bg-[#d93311] transition-colors duration-200"
             >
               Sign In

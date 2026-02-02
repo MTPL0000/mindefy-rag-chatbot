@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/rag-chatbot/store/authStore";
 import { Mail, Lock } from "lucide-react";
@@ -11,13 +11,19 @@ import Image from "next/image";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { login, isLoading, error } = useAuthStore();
+  const { login, isLoading, error, isAuthenticated } = useAuthStore();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/askdocs/chat");
+    }
+  }, [isAuthenticated, router]);
 
   const validateForm = () => {
     const errors = {};
@@ -48,7 +54,7 @@ export default function LoginForm() {
 
     const result = await login(formData);
     if (result.success) {
-      router.push("/chat");
+      router.replace("/askdocs/chat");
     }
   };
 
