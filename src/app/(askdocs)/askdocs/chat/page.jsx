@@ -118,7 +118,7 @@ export default function ChatPage() {
       if (error) {
         toast.error(`Authentication failed: ${error}`);
         // Clean URL
-        window.history.replaceState({}, document.title, '/chat');
+        window.history.replaceState({}, document.title, '/askdocs/chat');
         return;
       }
 
@@ -150,13 +150,13 @@ export default function ChatPage() {
 
           if (isPopup) {
             // If this is a popup, redirect the parent window and close popup
-            window.opener.location.href = '/chat';
+            window.opener.location.href = '/askdocs/chat';
             window.close();
           } else {
             // If this is the main window, just show success message
             toast.success('Successfully logged in');
             // Clean URL to remove tokens
-            window.history.replaceState({}, document.title, '/chat');
+            window.history.replaceState({}, document.title, '/askdocs/chat');
           }
         } catch (error) {
           console.error('Failed to fetch user profile:', error);
@@ -167,7 +167,7 @@ export default function ChatPage() {
             window.close();
           } else {
             // Clean URL to remove tokens
-            window.history.replaceState({}, document.title, '/chat');
+            window.history.replaceState({}, document.title, '/askdocs/chat');
           }
         }
       }
