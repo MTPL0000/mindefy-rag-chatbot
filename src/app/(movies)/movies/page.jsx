@@ -337,6 +337,8 @@ export default function MoviesHome() {
                 key={movie.id}
                 movie={movie}
                 onClick={handleMovieClick}
+                showGenres={true}
+                showRating={true}
               />
             ))}
           </div>
@@ -351,6 +353,8 @@ export default function MoviesHome() {
                 selected={isSelected(movie.id)}
                 onSelect={handleSelectMovie}
                 onClick={handleMovieClick}
+                showGenres={true}
+                showRating={true}
               />
             ))}
           </div>

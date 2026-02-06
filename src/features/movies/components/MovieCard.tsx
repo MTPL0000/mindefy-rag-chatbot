@@ -1,6 +1,6 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { Check, Star } from 'lucide-react';
 import { Movie } from '@/features/movies/types/movie';
 import { CheckSquare, Square } from 'lucide-react';
 import MoviePoster from './MoviePoster';
@@ -38,11 +38,11 @@ export default function MovieCard({
   return (
     <div
       onClick={handleClick}
-      className={`group relative cursor-pointer overflow-hidden rounded-xl bg-card shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 ${
+      className={`group relative cursor-pointer overflow-hidden rounded-xl bg-card shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 flex flex-col ${
         selected ? 'border-2 border-accent' : 'border-2 border-transparent'
       }`}
     >
-      <div className="aspect-[2/3] overflow-hidden bg-muted/20">
+      <div className="aspect-[2/3] overflow-hidden flex-shrink-0">
         <MoviePoster
           src={movie.poster}
           alt={movie.title}
@@ -61,27 +61,30 @@ export default function MovieCard({
         </div>
       )}
 
-      <div className="p-3">
-        <h3 className="line-clamp-1 font-medium text-sm">{movie.title}</h3>
-        <p className="text-xs text-muted mt-1">{movie.year}</p>
-        
+      <div className="p-3 flex flex-col flex-grow">
+        <h3 className="font-medium text-sm line-clamp-2 mb-2 min-h-[2.5rem]">{movie.title}</h3>
+        <div className="flex items-center gap-2 text-xs text-muted mb-2">
+          <span>{movie.year}</span>
+          {showRating && movie.rating != null && (
+            <>
+              <span>•</span>
+              <div className="flex items-center gap-1">
+                <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                <span>{movie.rating.toFixed(1)}</span>
+              </div>
+            </>
+          )}
+        </div>
         {showGenres && movie.genres && movie.genres.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {movie.genres.slice(0, 2).map((genre) => (
+          <div className="flex flex-wrap gap-1 mb-2 min-h-[1.25rem]">
+            {movie.genres.slice(0, 3).map((genre) => (
               <span
                 key={genre}
-                className="rounded-full bg-muted/10 px-2 py-0.5 text-xs text-muted"
+                className="text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full leading-tight"
               >
                 {genre}
               </span>
             ))}
-          </div>
-        )}
-        
-        {showRating && movie.rating && (
-          <div className="mt-2 flex items-center gap-1">
-            <span className="text-xs">★</span>
-            <span className="text-xs text-muted">{movie.rating.toFixed(1)}</span>
           </div>
         )}
       </div>
